@@ -99,6 +99,7 @@ export const typeJob = pgTable('type_job', {
   name: varchar('name', { length: 50 }).notNull().unique()
 });
 
+
 // Tabla Type_Plan
 export const typePlan = pgTable('type_plan', {
   id: serial('id').primaryKey(),
@@ -123,12 +124,14 @@ export const enterprise = pgTable('enterprise', {
 // Tabla Job
 export const job = pgTable('job', {
   id: serial('id').primaryKey(),
+  title: varchar('title', { length: 100 }).notNull(),
   enterpriseId: integer('enterprise_id').references(() => enterprise.id, { onDelete: 'cascade' }),
   locationId: integer('location_id').references(() => location.id).notNull(),
   direction: varchar('direction', { length: 200 }),
   scheduleId: integer('schedule_id').references(() => schedule.id),
   timeJobId: integer('time_job_id').references(() => timeJob.id),
   typeJobId: integer('type_job_id').references(() => typeJob.id),
+  turnJobId: integer('turn_job_id').references(() => turnJob.id),
   salaryMin: decimal('salary_min', { precision: 10, scale: 2 }),
   salaryMax: decimal('salary_max', { precision: 10, scale: 2 }),
   description: text('description'),
@@ -150,12 +153,6 @@ export const jobSkills = pgTable('job_skills', {
   pk: primaryKey({ columns: [table.jobId, table.skillId] })
 }));
 
-export const jobTurn = pgTable('job_turn', {
-  jobId: integer('job_id').references(() => job.id, { onDelete: 'cascade' }).notNull(),
-  turnId: integer('turn_id').references(() => turnJob.id, { onDelete: 'cascade' }).notNull()
-}, (table) => ({
-  pk: primaryKey({ columns: [table.jobId, table.turnId] })
-}));
 
 export const jobLanguages = pgTable('job_languages', {
   jobId: integer('job_id').references(() => job.id, { onDelete: 'cascade' }).notNull(),
@@ -193,7 +190,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   languages: many(userLanguages),
   interviews: many(interview),
   followUps: many(followUp),
-  skills: many(skillsUser)
+  skills: many(skillsUser),
 }));
 
 
@@ -243,9 +240,12 @@ export const jobRelations = relations(job, ({ one, many }) => ({
     references: [typeJob.id]
   }),
   jobSkills: many(jobSkills),
-  jobTurns: many(jobTurn),
   jobLanguages: many(jobLanguages),
-  followUps: many(followUp)
+  followUps: many(followUp),
+  turnJobs: one(turnJob, {
+    fields: [job.turnJobId],
+    references: [turnJob.id]
+  })
 }));
 
 
@@ -258,8 +258,8 @@ export const userLanguages = pgTable('user_languages', {
 }));
 // Relaciones para Languages
 export const languagesRelations = relations(languages, ({ many }) => ({
+  jobLanguages: many(jobLanguages),
   userLanguages: many(userLanguages),
-  jobLanguages: many(jobLanguages)
 }));
 
 // Relaciones para Skills
@@ -287,6 +287,28 @@ export const jobSkillsRelations = relations(jobSkills, ({ one }) => ({
   skill: one(skills, {
     fields: [jobSkills.skillId],
     references: [skills.id]
+  })
+}));
+
+export const jobLanguagesRelations = relations(jobLanguages, ({ one }) => ({
+  job: one(job, {
+    fields: [jobLanguages.jobId],
+    references: [job.id]
+  }),
+  language: one(languages, {
+    fields: [jobLanguages.languageId],
+    references: [languages.id]
+  })
+}));
+
+export const followUpRelations = relations(followUp, ({ one }) => ({
+  user: one(users, {
+    fields: [followUp.userId],
+    references: [users.id]
+  }),
+  job: one(job, {
+    fields: [followUp.jobId],
+    references: [job.id]
   })
 }));
 
