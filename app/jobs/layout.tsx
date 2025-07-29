@@ -1,12 +1,17 @@
 import AsideJob from "@/components/jobs/AsideJob";
 import JobDetailsModal from "@/components/jobs/JobDetailsModal";
+import HeaderLine from "@/components/landing/HeaderLine";
+import Header from "@/components/layout/Header";
 import JobProvider from "@/context/JobContext";
 import LinkedIn from "@/img/linkedin.png";
 
 export default async function layout({ children }:{children:React.ReactNode}) {
     
   return (
+    <>
+    <Header />
      <main className="main">
+            <HeaderLine />
             <div className="container">
                 <div className="main__body">
                     <div className="jobs">
@@ -35,5 +40,6 @@ export default async function layout({ children }:{children:React.ReactNode}) {
                 </div>
             </div>
         </main>
+    </>
   )
 }

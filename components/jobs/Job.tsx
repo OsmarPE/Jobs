@@ -4,39 +4,56 @@ import { Button } from "../ui/button";
 import ButtonJob from "./ButtonJob";
 import JobAction from "./JobAction";
 
-export default function Job() {
+interface Props{
+    enterprise: string;
+    location: string;
+    schedule: string;
+    timeJob: string;
+    typeJob: string;
+    salaryMin: number;
+    salaryMax: number;
+    description: string;
+    jobSkills: string[];
+    jobLanguages: string[];
+    followUps: string[];
+    turnJobs: string[];
+    title: string;
+    noVacancies: number;
+}
+
+export default function Job({enterprise, title,location, schedule, timeJob, typeJob, salaryMin, salaryMax, description, noVacancies, jobSkills, jobLanguages, followUps, turnJobs}: Props) {
   return (
      <article className="job">
                 <div className="job__top">
                     <img src={LinkedIn.src} alt="" className="job__image" />
                     <div className="job__body">
                         <div className="job__information">
-                            <span className="job__enterprise">AXEN Technology</span>
-                            <h3 className="job__title">Desarrollador Web</h3>
+                            <span className="job__enterprise">{enterprise}</span>
+                            <h3 className="job__title">{title}</h3>
                             <div className="job__requirements">
                                 <div className="job__requirement">
                                     <MapPin />
-                                    <span>Merida, Yucatán</span>
+                                    <span>{location}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <Clock12 />
-                                    <span>Tiempo Completo</span>
+                                    <span>{timeJob}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <CreditCard />
-                                    <span>$10,000</span>
+                                    <span>${salaryMin}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <Calendar />
-                                    <span>Lunes a viernes</span>
+                                    <span>{schedule}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <Building2 />
-                                    <span>Remoto</span>
+                                    <span>{typeJob}</span>
                                 </div>
                             </div>
                         </div>

@@ -1,29 +1,28 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
+import Navegation from "../landing/Navegation";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import HeaderProfile from "../landing/HeaderProfile";
 
 export default function Header() {
-  return (
-     <header className="header">
-        <div className="container">
-            <div className="header__body">
-                <Link href="/" className="header__logo">
-                    <span>Jobs</span> Easy
-                </Link>
-             
-                <div className="header__action">
-                    <Button variant={'secondaryLanding'} asChild>
-                        <Link href="/auth/register">
-                            Registrarse
+
+    const auth = true
+
+    return (
+        <header className="header">
+            <div className="container">
+                <div className="header__body">
+                    <div className="header__left">
+                        <Link href="/" className="header__logo">
+                            <span>Jobs</span> Easy
                         </Link>
-                    </Button>
-                    <Button asChild>
-                        <Link href="/auth/login">
-                            Iniciar Sesión
-                        </Link>
-                    </Button>
+                        <Navegation />
+                    </div>
+
+                    <HeaderProfile />
+
                 </div>
             </div>
-        </div>
-    </header>
-  )
+        </header>
+    )
 }

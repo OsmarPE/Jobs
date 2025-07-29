@@ -12,7 +12,19 @@ export const  getJobs = async (): Promise<Job[]> => {
       const data = await db
         .query
         .job
-        .findMany();
+        .findMany({
+          with: {
+            location: true,
+            enterprise: true,
+            schedule: true,
+            timeJob: true,
+            typeJob: true,
+            jobSkills: true,
+            turnJobs: true,
+            jobLanguages: true,
+            
+          }
+        });
       
       return data;
     } catch (error) {
@@ -36,7 +48,7 @@ export const getJob = async (id: Job['id']) => {
   }
 }
 
-export const createJob = async ({ enterpriseId, locationId, scheduleId, timeJobId, typeJobId, salaryMin, salaryMax, description, noVacancies }: NewJob) => {
+export const createJob = async ({ enterpriseId, locationId, scheduleId, timeJobId, typeJobId, salaryMin, salaryMax, description, noVacancies,title }: NewJob) => {
   try {
     const data = await db
       .insert(job)
@@ -49,7 +61,8 @@ export const createJob = async ({ enterpriseId, locationId, scheduleId, timeJobI
         salaryMin,
         salaryMax,
         description,
-        noVacancies
+        noVacancies,
+        title
       })
      
     return data;

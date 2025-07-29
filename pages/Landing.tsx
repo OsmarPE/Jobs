@@ -7,14 +7,17 @@ import Categories from '@/components/landing/Categories';
 import About from '@/components/landing/About';
 import Testimonials from '@/components/landing/Testimonials';
 import Footer from '@/components/layout/Footer';
+import Circle from '@/components/landing/Circle';
+import HeaderLine from '@/components/landing/HeaderLine';
 
 export default function Landing() {
   return (
     <div className="body-jobs">
-          <div className="header-line"></div>
-    <div className="circle circle-left-header"></div>
-    <div className="circle circle-middle-header"></div>
-    <div className="circle circle-right-header"></div>
+    <HeaderLine />
+    <Circle className="circle-left-header" />
+    <Circle className="circle-middle-header" />
+    <Circle className="circle-right-header" />
+
     <Header />
     <main className="main">
         <Hero />
