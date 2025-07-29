@@ -306,14 +306,51 @@ ul{
 
 }
 
+.header__left{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
 .main-nav__list{
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+.main-nav__link{
+    font-size: .875rem;
+    transition: all .4s ease;
+    padding: .5rem 0;
+    position: relative;
+}
+
+.main-nav__link::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: var(--color-white-100);
+    transform-origin: left;
+    transition: all .4s ease;
+}
+
+.main-nav__link:hover::after{
+    width: 100%;
+}
+
+.main-nav__link:hover{
+    color: var(--color-white-100);
 }
 
 .main-nav__link.active{
     color: var(--color-white-100);
+}
+
+.main-nav__link.active::after{
+    width: 100%;
 }
 
 .header__action{

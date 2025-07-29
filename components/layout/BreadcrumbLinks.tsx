@@ -7,6 +7,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import Link from "next/link";
 
 interface Props {
     links: {
@@ -26,8 +27,10 @@ export default function BreadcrumbLinks({ links, className = '' }: Props) {
             <BreadcrumbList>              
                 {links.map((link,index) => (
                     <>
-                        <BreadcrumbItem key={link.href}>
-                            <BreadcrumbLink href={link.href}>{link.label}</BreadcrumbLink>
+                        <BreadcrumbItem  key={index}> 
+                            <BreadcrumbLink asChild>
+                                <Link href={link.href}>{link.label}</Link>
+                            </BreadcrumbLink>
                         </BreadcrumbItem>
                         {lastLink !== index && <BreadcrumbSeparator />}
                     </>
