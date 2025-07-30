@@ -33,9 +33,9 @@ export default function HeaderProfile() {
                         <UserRound />
                         Mi perfil
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/my-jobs')}>
                         <Bookmark />
-                        Mis favoritos
+                        Mis trabajos
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                         <LogOut />

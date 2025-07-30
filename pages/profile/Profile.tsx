@@ -1,6 +1,6 @@
 import LinkedIn from "@/img/linkedin.png";
 import { Mail, Pencil, Phone, UserRound } from "lucide-react";
-import BreadcrumbLinks from "../layout/BreadcrumbLinks";
+import BreadcrumbLinks from "../../components/layout/BreadcrumbLinks";
 
 export default function Profile() {
   return (

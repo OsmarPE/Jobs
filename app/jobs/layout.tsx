@@ -1,5 +1,6 @@
 import AsideJob from "@/components/jobs/AsideJob";
 import JobDetailsModal from "@/components/jobs/JobDetailsModal";
+import Circle from "@/components/landing/Circle";
 import HeaderLine from "@/components/landing/HeaderLine";
 import Header from "@/components/layout/Header";
 import JobProvider from "@/context/JobContext";
@@ -10,6 +11,7 @@ export default async function layout({ children }:{children:React.ReactNode}) {
   return (
     <>
     <Header />
+    <Circle className="circle-left-header" />
      <main className="main">
             <HeaderLine />
             <div className="container">
