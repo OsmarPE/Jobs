@@ -23,8 +23,9 @@ export const users = pgTable('users', {
   token: varchar('token', { length: 255 }),
   cv: text('cv'),
   active: boolean('active').default(false),
-  locationId: integer('location_id').references(() => location.id).notNull(),
+  locationId: integer('location_id').references(() => location.id),
   direction: varchar('direction', { length: 200 }),
+  code: varchar('code', { length: 10 })
 });
 // Tabla Location
 export const location = pgTable('location', {

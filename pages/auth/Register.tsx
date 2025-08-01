@@ -1,11 +1,14 @@
+'use client';
+import RegisterForm from '@/components/auth/RegisterForm';
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-
 export default function Register() {
+
   return (
      <div className="auth">
             <div className="auth__icon">
@@ -16,27 +19,7 @@ export default function Register() {
                 <p className="auth__text">Conecta con empresas que buscan tu perfil profesional
                 </p>
             </header>
-
-            <form className="auth__form">
-                <div className="auth__item">
-                    <Label htmlFor="name" className="mb-2">Nombre</Label>
-                    <Input type="text" id="name" placeholder="lina romero"/>
-                </div>
-                <div className="auth__item">
-                    <Label htmlFor="email" className="mb-2">Email</Label>
-                    <Input type="email" id="email" placeholder="exemple@gmail.com"/>
-                </div>
-                <div className="auth__item">
-                    <Label htmlFor="password" className="mb-2">Contraseña</Label>
-                    <Input type="password" id="password" placeholder="••••••••••••••"/>
-                </div>
-                 <div className="auth__item">
-                    <Label htmlFor="password-repeat" className="auth__label">Repetir Contraseña</Label>
-                    <Input type="password" id="password-repeat" placeholder="••••••••••••••"/>
-                </div>
-
-                <Button className="h-11 mt-4">Crear cuenta</Button>
-            </form>
+            <RegisterForm />
             <p className='text-center text-sm mt-4'> ¿No tienes cuenta? <Link href="/auth/login" className="text-secundary-landing hover:underline">Inicia sesión</Link></p>
         
         </div>

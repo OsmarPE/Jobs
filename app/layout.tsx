@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit, Instrument_Serif } from "next/font/google";
 import "./globals.css";
+import ToasterLanding from "@/components/landing/ToasterLanding";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${outfit.variable} ${instrumentSerif.variable} antialiased dark`}
       >
         {children}
+        <ToasterLanding />
       </body>
     </html>
   );

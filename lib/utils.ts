@@ -18,3 +18,27 @@ export function timeAgoInWords(hours: number): string {
 
         return `${hours} hora${hours > 1 ? 's' : ''}`;
     }
+
+
+export function generateToken(length = 32) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < length; i++) {
+        token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return token;
+}
+
+
+export function getCode(length: number = 6) {
+    let code = ''; 
+    const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+   
+    for (let i = 0; i < length; i++) {
+        code += numbers[Math.floor(Math.random() * numbers.length)];
+    }
+   
+    return code;
+}
+   
+  

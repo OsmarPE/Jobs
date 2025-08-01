@@ -19,14 +19,16 @@ export default function FinishRegisterUser() {
 
     const formSchema = z.object({
         location: z.string().min(1, { message: 'Debes ingresar una ubicación' }),
-        salary: z.string().min(1, { message: 'Debes ingresar un salario' })
+        salary: z.string().min(1, { message: 'Debes ingresar un salario' }),
+        phone: z.string().min(1, { message: 'Debes ingresar un número de teléfono' })
     })
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             location: '',
-            salary: ''
+            salary: '',
+            phone: ''
         }
     });
 
@@ -36,6 +38,11 @@ export default function FinishRegisterUser() {
 
     const sections = [
         {
+            section: 'phone',
+            title: '¿Cuál es el número de teléfono de tu empresa?',
+            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, voluptatibus!'
+        }
+        ,{
             section: 'location',
             title: 'Hay que asegurarnos de que tus preferencias estén actualizadas. ¿En dónde te encuentras?',
             content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, voluptatibus!'
@@ -104,6 +111,21 @@ export default function FinishRegisterUser() {
                                     <FormLabel className="step__label label">Salario</FormLabel>
                                     <FormControl>
                                         <Input placeholder="$8,000" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    }
+                    {
+                        sections?.[step]?.section === 'phone' && <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="step__label label">Número de teléfono</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="+56 999999999" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
