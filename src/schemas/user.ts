@@ -136,3 +136,4 @@ export const activateUser = async (id: User['id']) => {
         throw new Error(`Error activating user: ${error}`);
     }
 }
+

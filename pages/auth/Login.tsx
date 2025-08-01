@@ -1,3 +1,4 @@
+import LoginForm from '@/components/auth/LoginForm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,18 +18,9 @@ export default function Login() {
                 </p>
             </header>
 
-            <form className="auth__form">
-                <div className="auth__item">
-                    <Label htmlFor="email" className="mb-2">Email</Label>
-                    <Input type="email" id="email" placeholder="exemple@gmail.com"/>
-                </div>
-                <div className="auth__item">
-                    <Label htmlFor="password" className="mb-2">Contraseña</Label>
-                    <Input type="password" id="password" placeholder="••••••••••••••"/>
-                </div>
+            
+            <LoginForm />
 
-                <Button className="h-11 mt-4">Iniciar Sesión</Button>
-            </form>
             <p className='text-center text-sm mt-4'> ¿No tienes cuenta? <Link href="/auth/register" className="text-secundary-landing hover:underline">Crea una cuenta</Link></p>
         </div>
   )
