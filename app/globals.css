@@ -1691,3 +1691,15 @@ body.hidden-scroll::-webkit-scrollbar {
     margin-top: 1.5rem;    
     margin-left: auto;
 }
+
+
+.code{
+    width: 100%;
+    max-width: 570px;
+    background-color: rgba(32, 22, 21, 0.1);
+    padding: 2rem ;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}

@@ -40,6 +40,7 @@ export const getUserById = async (id: User['id']) => {
 export const Register = async ({email,name,password}:NewUser) => {
     
     const code = getCode();
+    const token = generateToken();
     
     try {
         const data = await db
@@ -48,11 +49,12 @@ export const Register = async ({email,name,password}:NewUser) => {
                 name,
                 email,
                 password,
-                code
+                code,
+                token
 
             });
 
-        return data;
+        return {...data,  code, token};
     } catch (error) {
          throw new Error(`Error registering user: ${error}`);
     }
@@ -102,3 +104,35 @@ export const getUserByEmail = async (email: string) => {
         throw new Error(`Error fetching user by email: ${error}`);
     }
 }   
+
+export const getUserByToken = async (token: string) => {
+    try {
+        const data = await db
+            .select()
+            .from(users)
+            .where(eq(users.token, token))
+            .limit(1);
+
+        return data ? data[0] : null;
+
+    } catch (error) {
+        throw new Error(`Error fetching user by token: ${error}`);
+    }
+}
+
+export const activateUser = async (id: User['id']) => {
+    try {
+        const data = await db
+            .update(users)
+            .set({
+                active: true,
+                token: null,
+                code: null
+            })
+            .where(eq(users.id, id));
+
+        return data
+    } catch (error) {
+        throw new Error(`Error activating user: ${error}`);
+    }
+}

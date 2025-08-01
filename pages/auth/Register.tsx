@@ -8,7 +8,7 @@ import { Lock } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 export default function Register() {
-
+    
   return (
      <div className="auth">
             <div className="auth__icon">
