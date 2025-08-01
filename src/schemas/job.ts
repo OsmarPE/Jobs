@@ -19,9 +19,25 @@ export const  getJobs = async (): Promise<Job[]> => {
             schedule: true,
             timeJob: true,
             typeJob: true,
-            jobSkills: true,
+            jobSkills: {
+              with:{
+                skill: {
+                  columns:{
+                    name: true
+                  }
+                }
+              }
+            },
             turnJobs: true,
-            jobLanguages: true,
+            jobLanguages: {
+              with:{
+                language: {
+                  columns:{
+                    name: true
+                  }
+                }
+              }
+            },
             
           }
         });

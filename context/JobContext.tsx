@@ -1,26 +1,38 @@
 'use client';
+import { JobType } from "@/types";
 import { createContext, useState } from "react";
 
-export const JobContext = createContext({
+interface JobContextType {
+    showModal: boolean;
+    setJobCurrent: (job: JobType | null) => void;
+    closeModal: () => void;
+    job: JobType | null;
+}
+
+export const JobContext = createContext<JobContextType>({
     showModal: false,
-    deleteJob: () => {},
-    setJobCurrent: (job: any) => {},
+    closeModal: () => {},
+    setJobCurrent: (job: JobType | null) => {},
     job: null,
 });
 
 
-
 const JobProvider = ({ children }: { children: React.ReactNode }) => {
     const [showModal, setShowModal] = useState(false);
-    const [job, setJob] = useState(null);
+    const [job, setJob] = useState<JobType | null>(null);
 
 
-    const setJobCurrent = (job: any) => {
+    const setJobCurrent = (job: JobType | null) => {
         setJob(job);
         setShowModal(true);
     };
 
     const deleteJob = () => {
+        setJob(null);
+        setShowModal(false);
+    };
+
+    const closeModal = () => {
         setJob(null);
         setShowModal(false);
     };
@@ -31,7 +43,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
             value={{
                 showModal,
                 setJobCurrent,
-                deleteJob,
+                closeModal,
                 job,
             }}
         >

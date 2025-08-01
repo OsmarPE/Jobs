@@ -3,42 +3,41 @@ import { Bookmark, Building2, Calendar, Clock12, CreditCard, Link, MapPin } from
 import { Button } from "../ui/button";
 import ButtonJob from "./ButtonJob";
 import JobAction from "./JobAction";
+import { type JobType } from "@/types";
+import { timeAgoInWords } from "@/lib/utils";
 
-interface Props{
-    enterprise: string;
-    location: string;
-    schedule: string;
-    timeJob: string;
-    typeJob: string;
-    salaryMin: number;
-    salaryMax: number;
-    description: string;
-    jobSkills: string[];
-    jobLanguages: string[];
-    followUps: string[];
-    turnJobs: string[];
-    title: string;
-    noVacancies: number;
-}
 
-export default function Job({enterprise, title,location, schedule, timeJob, typeJob, salaryMin, salaryMax, description, noVacancies, jobSkills, jobLanguages, followUps, turnJobs}: Props) {
+type Props = JobType
+
+
+export default function Job(props: Props) {
+  
+    const { enterprise, title, location, schedule, timeJob, typeJob, salaryMin, createdAt } = props;
+  
+    const timeAgo = new Date(createdAt) 
+    const now = new Date();
+    const timeDifference = now.getTime() - timeAgo.getTime();
+    const timeAgoInHours = Math.floor((now.getTime() - timeAgo.getTime()) / (1000 * 60 * 60));
+
+
+    
   return (
      <article className="job">
                 <div className="job__top">
                     <img src={LinkedIn.src} alt="" className="job__image" />
                     <div className="job__body">
                         <div className="job__information">
-                            <span className="job__enterprise">{enterprise}</span>
+                            <span className="job__enterprise">{enterprise.name}</span>
                             <h3 className="job__title">{title}</h3>
                             <div className="job__requirements">
                                 <div className="job__requirement">
                                     <MapPin />
-                                    <span>{location}</span>
+                                    <span>{location?.city}, {location?.country}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <Clock12 />
-                                    <span>{timeJob}</span>
+                                    <span>{timeJob?.name}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
@@ -48,12 +47,12 @@ export default function Job({enterprise, title,location, schedule, timeJob, type
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <Calendar />
-                                    <span>{schedule}</span>
+                                    <span>{schedule?.name}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <Building2 />
-                                    <span>{typeJob}</span>
+                                    <span>{typeJob?.name}</span>
                                 </div>
                             </div>
                         </div>
@@ -61,8 +60,8 @@ export default function Job({enterprise, title,location, schedule, timeJob, type
                     </div>
                 </div>
                 <div className="job__bottom">
-                    <span className="job__time">Hace 3 horas</span>
-                    <ButtonJob />
+                    <span className="job__time">Hace {timeAgoInWords(timeAgoInHours)}</span>
+                    <ButtonJob job={props} />
                 </div>
             </article>
   )

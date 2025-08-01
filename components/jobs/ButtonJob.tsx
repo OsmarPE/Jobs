@@ -2,13 +2,16 @@
 
 import { useJobCurrent } from "@/hooks/use-job-current";
 import { Button } from "../ui/button";
+import { JobType } from "@/types";
 
-export default function ButtonJob() {
+type Props = {job: JobType};
+
+export default function ButtonJob({job}: Props) {
     
     const { setJobCurrent } = useJobCurrent();
 
     const handleShowJobCurrent = () => {
-        setJobCurrent({});
+        setJobCurrent(job);
     }
 
     return (

@@ -8,6 +8,7 @@ import {
   integer, 
   date, 
   decimal,
+  timestamp,
   primaryKey
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
@@ -135,7 +136,8 @@ export const job = pgTable('job', {
   salaryMin: decimal('salary_min', { precision: 10, scale: 2 }),
   salaryMax: decimal('salary_max', { precision: 10, scale: 2 }),
   description: text('description'),
-  noVacancies: integer('no_vacancies').default(0)
+  noVacancies: integer('no_vacancies').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 
