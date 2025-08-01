@@ -1485,6 +1485,11 @@ body.hidden-scroll::-webkit-scrollbar {
     grid-template-columns: repeat(2,1fr);
 }
 
+.enterprise__label{
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
 .upload{
     display: flex;
     flex-direction: column;
