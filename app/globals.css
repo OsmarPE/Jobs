@@ -1096,7 +1096,7 @@ ul{
     top: 0;
     left: 0;
     bottom: 0;
-    width: 40%;
+    width: 0%;
     background-color: var(--color-primary);
     transition: all .4s ease;
 }
@@ -1640,7 +1640,7 @@ body.hidden-scroll::-webkit-scrollbar {
 
 
 .my-job{
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 8px;
     background-color: rgba(32, 22, 21, 0.3);
     color: var(--color-text);
@@ -1653,8 +1653,8 @@ body.hidden-scroll::-webkit-scrollbar {
 }
 
 .my-job__icon{
-    width: 4.25rem;
-    height: 4.25rem;
+    width: 4rem;
+    height: 4rem;
     border-radius: 8px;
     display: flex;
     align-items: center;

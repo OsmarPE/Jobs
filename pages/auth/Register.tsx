@@ -4,24 +4,33 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock } from 'lucide-react'
+import { Lock, MailPlus } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 export default function Register() {
+
+    const [sendedEmailConfirm, setSendedEmailConfirm] = useState(false)
+
+    if (sendedEmailConfirm) return (
+        <div className='w-full bg-primary/5  max-w-md text-primary p-6 rounded-md border border-primary/10'>
+            <div className='flex items-center justify-center  text-primary size-14 rounded-full bg-primary/15 '>
+                <MailPlus className='size-6 ' />
+        
+            </div>
+            <h2 className=' text-lg font-medium mt-4'>Verifica tu correo electrónico</h2>
+            <p className='text-sm mt-1  '>
+                Te has registrado correctamente. Revisa tu correo electrónico para confirmar tu cuenta antes de iniciar sesión.
+            </p>
+            <Button className='w-full mt-8' asChild>
+                <Link href="/auth/login">
+                    Iniciar sesión
+                </Link>
+            </Button>
+            
+        </div>
+    )
     
   return (
-     <div className="auth">
-            <div className="auth__icon">
-                <Lock />
-            </div>
-            <header className="auth__heading">
-                <h1 className="auth__title">Crear cuenta</h1>
-                <p className="auth__text">Conecta con empresas que buscan tu perfil profesional
-                </p>
-            </header>
-            <RegisterForm />
-            <p className='text-center text-sm mt-4'> ¿No tienes cuenta? <Link href="/auth/login" className="text-secundary-landing hover:underline">Inicia sesión</Link></p>
-        
-        </div>
+        <RegisterForm setSendedEmailConfirm={setSendedEmailConfirm} />
   )
 }

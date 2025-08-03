@@ -7,13 +7,14 @@ import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import FormItem from "./FormItem";
 import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 const user = z.object({
   email: z.string().email({ message: "Ingresa tu correo electronico" }),
   password: z.string().min(1, { message: "Ingresa tu contraseña" })
 })
 
-export default function LoginForm() {
+export default function LoginForm({originPath}:{originPath:string}) {
   const form = useForm({
     resolver: zodResolver(user),
     defaultValues: {
@@ -21,7 +22,8 @@ export default function LoginForm() {
         password: ""
     },
   });
-
+  
+  
   const onSubmit = async (data: z.infer<typeof user>) => {
     const res = await fetch('/api/users/login', {
       method: 'POST',
@@ -32,7 +34,6 @@ export default function LoginForm() {
     });
 
     const response = await res.json();
-    console.log(response);
     
     
     if (response.status !== 200) {
@@ -41,6 +42,7 @@ export default function LoginForm() {
     }
 
     toast.success(response.message);
+    redirect(originPath || '/');
 
   };
 

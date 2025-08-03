@@ -6,7 +6,7 @@ import { Lock } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-export default function Login() {
+export default function Login({originPath}:{originPath:string}) {
   return (
      <div className="auth">
             <div className="auth__icon">
@@ -19,7 +19,7 @@ export default function Login() {
             </header>
 
             
-            <LoginForm />
+            <LoginForm originPath={originPath} />
 
             <p className='text-center text-sm mt-4'> ¿No tienes cuenta? <Link href="/auth/register" className="text-secundary-landing hover:underline">Crea una cuenta</Link></p>
         </div>

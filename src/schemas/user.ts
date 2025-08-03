@@ -29,9 +29,10 @@ export const getUserById = async (id: User['id']) => {
         const data = await db
             .select()
             .from(users)
-            .where(eq(users.id, id));
+            .where(eq(users.id, id))
+            .limit(1);
 
-        return data;
+        return data.length ? data[0] : null;
 
     } catch (error) {
         throw new Error(`Error fetching user: ${error}`);
@@ -71,19 +72,21 @@ export const deleteUser = async (id: User['id']) => {
         throw new Error(`Error deleting user: ${error}`);
     }
 }
-export const updateUser = async (id: number, {name,email,password}:UpdateUser) => {
+export const updateUser = async (id: number, {...datas}:UpdateUser) => {
 
+    console.log({
+        ...datas,
+        id  
+    });
     
     try {
         const data = await db
             .update(users)
-            .set({
-                name,
-                email,
-                password
-            })
+            .set(datas)
             .where(eq(users.id, id));
 
+            console.log(data);
+            
         return data
     } catch (error) {
         throw new Error(`Error updating user: ${error}`);

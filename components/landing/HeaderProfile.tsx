@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { Button } from '../ui/button'
 import Link from 'next/link'
@@ -13,11 +13,29 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Bookmark, LogOut, UserRound } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { getCookie } from '@/lib/utils'
+import logoutAction from '@/actions/logout'
 export default function HeaderProfile() {
 
-    const auth = true
-    const router = useRouter()
 
+    const [auth, setAuth] = useState(false)
+    const router = useRouter()
+    
+    useEffect(() => {
+        const token = getCookie('token')
+        if (token) {
+            setAuth(true)
+        }
+    }, [])
+
+
+   
+    const logout = async () => {
+        await fetch(`/api/users/logout`);
+        setAuth(false)
+    }
+
+    
     if (auth) {
         return (
             <DropdownMenu>
@@ -37,7 +55,7 @@ export default function HeaderProfile() {
                         <Bookmark />
                         Mis trabajos
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={logout}>
                         <LogOut />
                         Cerrar sesión
                     </DropdownMenuItem>
@@ -62,3 +80,4 @@ export default function HeaderProfile() {
         </div>
     )
 }
+

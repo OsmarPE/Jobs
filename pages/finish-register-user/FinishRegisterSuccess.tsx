@@ -1,6 +1,10 @@
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import React from 'react'
 
 export default function FinishRegisterSuccess() {
+
+
     return (
         <article className="step step--success">
             <div className="step__icon">
@@ -8,7 +12,11 @@ export default function FinishRegisterSuccess() {
             </div>
             <h2 className="step__title">Hemos terminado</h2>
             <p className="step__text">Estas listo para poder encontrar un trabajo, dale a siguiente para regresar al inicio</p>
-            <button className="step__btn btn btn--primary">Empezar</button>
+            <Button asChild size={'lg'} className='w-full'>
+                <Link href="/">
+                    Empezar
+                </Link>
+            </Button>
         </article>
     )
 }

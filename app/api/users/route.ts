@@ -1,4 +1,5 @@
 
+import { hashPassword } from '@/lib/auth';
 import { sendMail } from '@/src/mail/send';
 import { getUserByEmail, Register } from '@/src/schemas/user';
 import { NextRequest, NextResponse } from 'next/server';
@@ -29,7 +30,9 @@ export async function POST(request: NextRequest) {
          });
     }
 
-    const response = await Register(data);
+    const password = await hashPassword(data.password);
+    
+    const response = await Register({...data, password});
 
     
     if (!response.rowCount){

@@ -9,8 +9,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-export default function FinishRegisterUser() {
-
+export default function FinishRegisterUser({id}:{id:string}) {
+    
     const [section, setSection] = useState('');
     const [step, setStep] = useState(0);
     const [success, setSuccess] = useState(false);
@@ -18,22 +18,36 @@ export default function FinishRegisterUser() {
 
 
     const formSchema = z.object({
-        location: z.string().min(1, { message: 'Debes ingresar una ubicación' }),
+        locationId: z.string().min(1, { message: 'Debes ingresar una ubicación' }),
         salary: z.string().min(1, { message: 'Debes ingresar un salario' }),
-        phone: z.string().min(1, { message: 'Debes ingresar un número de teléfono' })
+        phone: z.string().min(1, { message: 'Debes ingresar un número de teléfono' }).max(10, { message: 'Debes ingresar un número de teléfono válido' })
     })
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            location: '',
+            locationId: '',
             salary: '',
             phone: ''
         }
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        
+        const response = await fetch(`/api/users/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...data,
+                finishedRegistration: true,
+                locationId: 1
+            })
+        });
+
+        const datas = await response.json();
+        console.log(datas);
     }
 
     const sections = [
@@ -59,6 +73,8 @@ export default function FinishRegisterUser() {
         const nextStep = step + 1;
         
         if (nextStep === sections.length) {
+
+            await form.handleSubmit(onSubmit)()
             setSuccess(true);
             return
         }
@@ -72,6 +88,8 @@ export default function FinishRegisterUser() {
         }
 
         form.clearErrors()
+
+     
         setStep(nextStep);
     }
 
@@ -91,7 +109,7 @@ export default function FinishRegisterUser() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="step__form">
                     {sections?.[step]?.section === 'location' && <FormField
                         control={form.control}
-                        name="location"
+                        name="locationId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="step__label label">Ubicación</FormLabel>
@@ -125,7 +143,7 @@ export default function FinishRegisterUser() {
                                 <FormItem>
                                     <FormLabel className="step__label label">Número de teléfono</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="+56 999999999" {...field} />
+                                        <Input type="tel" placeholder="+56 999999999" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -133,11 +151,7 @@ export default function FinishRegisterUser() {
                         />
                     }
 
-                    {step === section.length - 1 ? (
-                        <Input type="submit" value="Siguiente" className="step__submit btn btn--primary" />
-                    ) : (
-                        <button type="button" onClick={ () => handleNextSection(step)} className="step__submit btn btn--primary">Siguiente</button>
-                    )}
+                    <button type="button" onClick={ () => handleNextSection(step)} className="step__submit btn btn--primary">Siguiente</button>
 
                 </form>
             </article>
