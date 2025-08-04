@@ -6,7 +6,8 @@ export default async function page({ params }: { params: Promise<{ id: string }>
 
     return (
         <section className="jobs__results">
-            <Job />
+            {id}
+            {/* <Job id={id} /> */}
         </section>
     )
 }

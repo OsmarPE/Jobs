@@ -4,8 +4,10 @@ import LinkendIn from "@/img/linkedin.png";
 import { Bookmark, Box, Building2, Calendar, CircleAlert, Clock12, CreditCard, Link, MapPin, Type, UsersRound, X } from "lucide-react";
 import { motion, Variants } from "motion/react"
 import { Button } from "../ui/button";
+import LinkNext from "next/link";
 import { useEffect } from "react";
-import { timeAgoInWords } from "@/lib/utils";
+import { formarPrice, timeAgoInWords } from "@/lib/utils";
+import Circle from "../landing/Circle";
 
 export default function JobDetailsModal() {
 
@@ -52,7 +54,7 @@ export default function JobDetailsModal() {
     if (!showModal) return null;
 
 
-    const { enterprise, title, location, schedule, timeJob, typeJob, salaryMin, salaryMax, description, noVacancies, jobSkills, jobLanguages, followUps, turnJobs, createdAt } = job || {};
+    const { id, enterprise, title, location, schedule, timeJob, typeJob, salaryMin, salaryMax, description, noVacancies, jobSkills, jobLanguages, followUps, turnJobs, createdAt } = job || {};
 
     const showSalaryRange = salaryMin && salaryMax;
     const timeAgo = new Date(createdAt || '');
@@ -63,6 +65,7 @@ export default function JobDetailsModal() {
     return (
         <motion.div className="job__container" initial={{ opacity: 0 }} animate={{ opacity: 1, backdropFilter: 'blur(2px)' }} >
             <motion.div className="details" initial={modalVariants.hidden} animate={modalVariants.visible}>
+                <Circle className="top-0 right-3/8 -translate-y-1/3" /> 
                 <button onClick={closeModal} className="details__close">
                     <X />
                 </button>
@@ -93,7 +96,7 @@ export default function JobDetailsModal() {
                         <span> • </span>
                         <li className="details__item">
                             <CreditCard />
-                            <span>${showSalaryRange ? `${salaryMin} - ${salaryMax}` : salaryMin}</span>
+                            <span>{showSalaryRange ? `${formarPrice(+salaryMin)} - ${formarPrice(+salaryMax)}` : formarPrice(salaryMin ? +salaryMin : 0)}</span>
                         </li>
                         <span> • </span>
                         <li className="details__item">
@@ -109,8 +112,10 @@ export default function JobDetailsModal() {
                     </ul>
 
                     <div className="details__actions">
-                        <Button >
-                            Postularse ahora
+                        <Button asChild>
+                            <LinkNext href={`/apply-job/${id}`}>
+                                Postularse ahora
+                            </LinkNext>
                         </Button>
                         <div className="details__line"></div>
                         <div className="details__socials">

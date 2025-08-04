@@ -73,6 +73,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-landing: var(--color-coffee-100);
   --color-foreground: var(--foreground);
   --font-primary: var(--font-outfit);
   --font-secondary: var(--font-instrument-serif);

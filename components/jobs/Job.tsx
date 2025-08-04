@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import ButtonJob from "./ButtonJob";
 import JobAction from "./JobAction";
 import { type JobType } from "@/types";
-import { timeAgoInWords } from "@/lib/utils";
+import { formarPrice, timeAgoInWords } from "@/lib/utils";
 
 
 type Props = JobType
@@ -12,13 +12,11 @@ type Props = JobType
 
 export default function Job(props: Props) {
   
-    const { enterprise, title, location, schedule, timeJob, typeJob, salaryMin, createdAt } = props;
+    const { enterprise, title, location, schedule, timeJob, typeJob, salaryMin, createdAt, id } = props;
   
     const timeAgo = new Date(createdAt) 
     const now = new Date();
-    const timeDifference = now.getTime() - timeAgo.getTime();
     const timeAgoInHours = Math.floor((now.getTime() - timeAgo.getTime()) / (1000 * 60 * 60));
-
 
     
   return (
@@ -42,7 +40,7 @@ export default function Job(props: Props) {
                                 <span>•</span>
                                 <div className="job__requirement">
                                     <CreditCard />
-                                    <span>${salaryMin}</span>
+                                    <span>{formarPrice(salaryMin ? +salaryMin : 0)}</span>
                                 </div>
                                 <span>•</span>
                                 <div className="job__requirement">
@@ -56,7 +54,7 @@ export default function Job(props: Props) {
                                 </div>
                             </div>
                         </div>
-                        <JobAction />
+                        <JobAction id={id} />
                     </div>
                 </div>
                 <div className="job__bottom">

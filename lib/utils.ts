@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { verify } from "crypto";
 import { twMerge } from "tailwind-merge"
+import jwt from 'jsonwebtoken';
+// import { cookies } from "next/headers";
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -54,5 +56,20 @@ export function getCookie(name: string): string | null {
   return null;
 }
 
-const SALT_ROUNDS = 10;
 
+export const formarPrice = (price: number) => {
+  return price.toLocaleString('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+export const getUserByToken = async() => {
+    // const cookie = await cookies();
+    // const token = cookie.get('token');
+    // if (!token) return null
+    // const user = jwt.verify(token.value, process.env.SECRET_KEY!);
+    return null;
+}

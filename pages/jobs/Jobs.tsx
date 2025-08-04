@@ -1,8 +1,9 @@
 
 import Job from "@/components/jobs/Job";
+import JobAuthWarning from "@/components/jobs/JobAuthWarning";
 import { JobType  } from "@/types";
 
-export default async function Jobs() {
+export default async function Jobs({ auth }: { auth: string }) {
     
     const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/job',{
         cache: 'no-cache',
@@ -10,7 +11,7 @@ export default async function Jobs() {
     const data = await response.json()
     const jobs = data.message as JobType[]
 
-   
+    
     return (
         <section className="jobs__results">
 
@@ -39,6 +40,7 @@ export default async function Jobs() {
                 )
                 )
             }
+            {auth == 'true' && <JobAuthWarning />}
         </section>
     )
 }

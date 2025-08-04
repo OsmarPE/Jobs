@@ -30,17 +30,10 @@ export async function POST(request: NextRequest) {
         }
 
         
-        const token = jwt.sign({ email }, process.env.SECRET_KEY!, { expiresIn: '27d' });
+        const token = jwt.sign({ email, id:user.id, name: user.name }, process.env.SECRET_KEY!, { expiresIn: '27d' });
         
         const cookie = await cookies();
 
-        // const user = {
-        //     email,
-        //     name: data.name,
-        //     id: data.id
-        // }
-
-        // cookie.set('user', JSON.stringify(user), { httpOnly: false });
         cookie.set('token', token);
 
 

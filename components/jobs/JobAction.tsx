@@ -2,13 +2,14 @@
 import { Bookmark, Check, Link } from 'lucide-react'
 import React, { useState } from 'react'
 
-export default function JobAction() {
+export default function JobAction({id}: {id: number}) {
 
     const [pasting, setPasting] = useState(false);
     
     const handlePaste = async () => {
         setPasting(true);
-        await navigator.clipboard.writeText('test')
+        const LINK = `${process.env.NEXT_PUBLIC_BASE_URL}/detail-job/${id}`
+        await navigator.clipboard.writeText(LINK);
         setTimeout(() => {
             setPasting(false);
         }, 3000);

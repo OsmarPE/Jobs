@@ -12,7 +12,7 @@ export default async function layout({ children }:{children:React.ReactNode}) {
     <>
     <Header />
     <Circle className="circle-left-header" />
-     <main className="main">
+     <main className="main body-jobs">
             <HeaderLine />
             <div className="container">
                 <div className="main__body">
