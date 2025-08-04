@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${instrumentSerif.variable} antialiased dark`}
+        className={`${outfit.variable} ${instrumentSerif.variable} body-jobs antialiased dark`}
       >
         {children}
         <ToasterLanding />
