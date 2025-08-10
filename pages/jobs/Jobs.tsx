@@ -1,6 +1,7 @@
 
 import Job from "@/components/jobs/Job";
 import JobAuthWarning from "@/components/jobs/JobAuthWarning";
+import { JobPagination } from "@/components/jobs/JobPagination";
 import { getJobs } from "@/src/schemas/job";
 import { JobType  } from "@/types";
 
@@ -39,6 +40,7 @@ export default async function Jobs({ auth, typeJob,location}: { auth?: string, l
                 )
             }
             {auth == 'true' && <JobAuthWarning />}
+            <JobPagination />
         </section>
     )
 }

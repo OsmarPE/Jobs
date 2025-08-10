@@ -16,11 +16,13 @@ export default function SearchJob() {
             updateParams({ search: value })
         }, 500)
     }
+
+    const search = getParam('search') ?? ''
     
     return (
         <form className="hero__form jobs__form">
             <div className="hero__input">
-                <input className="hero__search" type="text" placeholder="Buscar trabajo" onChange={(e) => handleSearch(e.target.value)} />
+                <input className="hero__search" defaultValue={search} type="text" placeholder="Buscar trabajo" onChange={(e) => handleSearch(e.target.value)} />
                 <div className="hero__separator"></div>
                 <input className="hero__location" type="text" placeholder="Ubicación" />
             </div>

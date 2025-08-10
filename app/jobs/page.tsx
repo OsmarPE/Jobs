@@ -5,8 +5,8 @@ import HeaderLine from "@/components/landing/HeaderLine";
 import Header from "@/components/layout/Header";
 import JobProvider from "@/context/JobContext";
 import Jobs from "@/pages/jobs/Jobs";
-import LoadingJobs from "@/pages/jobs/LoadingJobs";
-import SearchJob from "@/pages/jobs/SearchJob";
+import LoadingJobs from "@/components/jobs/LoadingJobs";
+import SearchJob from "@/components/jobs/SearchJob";
 import { Suspense } from "react";
 
 export default async function page({ searchParams }: { searchParams: Promise<{ auth?: string, typeJob?: string, location?: string }> }) {
