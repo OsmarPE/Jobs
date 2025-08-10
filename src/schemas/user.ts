@@ -140,3 +140,26 @@ export const activateUser = async (id: User['id']) => {
     }
 }
 
+
+export const getProfile = async (id: User['id']) => {
+    try {
+        const data = await db.query.users.findFirst({
+            where: eq(users.id, id),
+            with:{
+                experiences: true,
+                skills: true,
+                educations: true,
+                languages: {
+                    with: {
+                        language: true
+                    }
+                },
+            }
+        })
+
+        return data ? data : null;
+
+    } catch (error) {
+        throw new Error(`Error fetching profile: ${error}`);
+    }
+}

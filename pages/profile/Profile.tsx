@@ -2,7 +2,14 @@ import LinkedIn from "@/img/linkedin.png";
 import { Mail, Pencil, Phone, UserRound } from "lucide-react";
 import BreadcrumbLinks from "../../components/layout/BreadcrumbLinks";
 
-export default function Profile() {
+import { formatPhone, getDateProfile } from "@/lib/utils";
+import { UserWithRelations } from "@/types";
+
+export default function Profile({user}: { user: UserWithRelations }) {
+
+    const { name, email, phone, cv, experiences , educations} = user;
+
+
   return (
     <div className="profile">
         <div className="circle circle-left-header"></div>
@@ -14,7 +21,7 @@ export default function Profile() {
 
         <div className="profile__heading">
             <div>
-                <h1 className="profile__name">Osmar Sanchez</h1>
+                <h1 className="profile__name">{name}</h1>
                 <p className="profile__description">Ingeniero en sistemas computacionales</p>
             </div>
             <button className="profile__btn btn btn--small">
@@ -33,15 +40,15 @@ export default function Profile() {
                 <ul className="profile__list__information">
                     <li className="profile__item">
                         <UserRound />
-                        <span>Osmar Uriel Perera Balam</span>
+                        <span>{name}</span>
                     </li>
                     <li className="profile__item">
                         <Mail />
-                        <span>osmarperera10@gmail.com</span>
+                        <span>{email}</span>
                     </li>
                     <li className="profile__item">
                         <Phone />
-                        <span>999-483-4392</span>
+                        <span>{formatPhone(phone?.toString() || '')}</span>
                     </li>
                 </ul>
             </article>
@@ -52,7 +59,7 @@ export default function Profile() {
                         <Pencil />
                     </button>
                 </div>
-                <p className="profile__text">Curriculum.pdf</p>
+                <p className="profile__text">{cv || 'Sin curriculum'}</p>
                 
             </article>
             <article className="profile__card">
@@ -63,18 +70,22 @@ export default function Profile() {
                     </button>
                 </div>
                 <ul className="experience">
+                    {experiences?.map((experience) => (
+                    
                     <li className="experience__item">
                         <img className="experience__image" src={LinkedIn.src} alt=""/>
                         <div className="experience__body">
-                            <h3 className="experience__title">Ingeniero de Sistemas Computacionales</h3>
+                            <h3 className="experience__title">{experience?.area}</h3>
                             <div className="experience__info">
-                                <span className="experience__text">Ingeniero de Sistemas Computacionales</span>
+                                <span className="experience__text">{experience?.areaJob}</span>
                                 <span> • </span>
-                                <span className="experience__text">2021 - Actual</span>
+                                <span className="experience__text capitalize">{getDateProfile(experience?.dateFrom)} - {getDateProfile(experience?.dateTo)}</span>
                                 
                             </div>
                         </div>
                     </li>
+                ))
+                    }
                 </ul>
                 
             </article>
@@ -86,14 +97,18 @@ export default function Profile() {
                     </button>
                 </div>
                    <ul className="education">
-                    <li className="education__item">
-                        <img className="education__image" src={LinkedIn.src} alt=""/>
-                        <div className="education__body">
-                            <h3 className="education__title">Instituto Tecnologico de Merida</h3>
-                            <span className="education__text">Ingeniero de Sistemas Computacionales</span>
-                            <span className="education__text">Febrero 2019 - marzo 2026</span>
-                        </div>
-                    </li>
+                    {
+                        educations?.map((education) => (
+                            <li className="education__item">
+                                <img className="education__image" src={LinkedIn.src} alt=""/>
+                                <div className="education__body">
+                                    <h3 className="education__title">{education?.institution}</h3>
+                                    <span className="education__text">{education?.title}</span>
+                                    <span className="education__text">{getDateProfile(education?.dateFrom)} - {getDateProfile(education?.dateTo)}</span>
+                                </div>
+                            </li>
+                        ))
+                    }
                 </ul>
                 
             </article>
@@ -105,24 +120,32 @@ export default function Profile() {
                     </button>
                 </div>
                  <ul className="skills">
-                    <li className="skills__item badge">
-                        HTML
-                    </li>
-                    <li className="skills__item badge">
-                        CSS
-                    </li>
-                    <li className="skills__item badge">
-                        JS
-                    </li>
-                    <li className="skills__item badge">
-                        TypeScript
-                    </li>
-                    <li className="skills__item badge">
-                        React
-                    </li>
-                    <li className="skills__item badge">
-                        Node
-                    </li>
+                    {
+                        user.skills?.map((skill) => (
+                            <li className="skills__item badge">
+                                {skill?.name}
+                            </li>
+                        ))
+                    }
+                 
+                </ul>
+            </article>
+             <article className="profile__card">
+                <div className="profile__row">
+                    <h2 className="profile__subtitle">Habilidades</h2>
+                    <button className="profile__edit">
+                        <Pencil />
+                    </button>
+                </div>
+                 <ul className="languages">
+                    {
+                        user.languages?.map((language) => (
+                            <li className="languages__item badge">
+                                {language?.language?.name}
+                            </li>
+                        ))
+                    }
+                 
                 </ul>
             </article>
         </div>

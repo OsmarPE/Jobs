@@ -1,5 +1,5 @@
 
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { job } from '../db/schema';
 import { db } from '..';
 
@@ -7,12 +7,39 @@ export type Job = typeof job.$inferSelect;
 export type NewJob = typeof job.$inferInsert;
 export type UpdateJob = Partial<NewJob>;
 
-export const  getJobs = async (): Promise<Job[]> => {
+interface JobFilters {
+  location?: number;
+  enterprise?: number;
+  schedule?: number;
+  timeJob?: number;
+  typeJob?: number;
+  skillNames?: string[];
+  languageNames?: string[];
+  isActive?: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  limit?: number;
+  offset?: number;
+}
+
+
+export const  getJobs = async ( filters: JobFilters = {limit: 10} ): Promise<Job[]> => {
+
+  
+    const { typeJob, location } = filters
+    let where: any[] = []
+    
+    if (where){
+      if(typeJob) where.push(eq(job.timeJobId, typeJob))
+      if (location) where.push(eq(job.locationId, location))
+    }
+    
     try {
       const data = await db
         .query
         .job
         .findMany({
+          where: (where.length > 0) ? and(...where) : undefined,
           with: {
             location: true,
             enterprise: true,
@@ -39,9 +66,12 @@ export const  getJobs = async (): Promise<Job[]> => {
               }
             },
             
-          }
+          },
+          limit: filters.limit,
         });
       
+        
+        
       return data;
     } catch (error) {
       throw new Error(`Error fetching jobs: ${error}`);

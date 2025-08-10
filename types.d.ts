@@ -1,17 +1,35 @@
 // lib/db/types.ts
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import { User } from './src/schemas/user';
 
 
 // User con relaciones
-export type UserWithRelations =  {
+export type UserWithRelations = User & {
   location?: Location;
   student?: Student[];
   experiences?: Experience[];
-  languages?: UserLanguage[];
+  languages?: Languages[];
   interviews?: Interview[];
   followUps?: FollowUp[];
   skills?: SkillsUser[];
+  educations?: Education[];
 };
+
+export type Languages = {
+    userId: number ,
+    languageId: number,
+    language?: Language,
+}
+
+export type Education = {
+    id: number | null,
+    userId: number | null,
+    institution: string | null,
+    title: string | null,
+    dateFrom: string | null,
+    dateTo: string | null,
+    finished: boolean | null,
+}
 
 // Job con relaciones
 export type JobWithRelations =  {
@@ -127,14 +145,14 @@ interface Language{
 
 interface UserLanguage{
     id: number;
-    userId: number;
+    userId: number | null;
     languageId: number;
     language?: Language;
 }
 
 interface FollowUp{
     id: number;
-    userId: number;
+    userId: number | null;
     jobId: number;
     status: string;
 }
@@ -174,6 +192,16 @@ export type UserRegistrationForm = {
   locationId: number;
   direction?: string;
 };
+
+export type Experience = {
+    id: number | null,
+    userId: number | null,
+    dateFrom: string | null,
+    dateTo: string | null,
+    currentJob: boolean | null,
+    area: string | null,
+    areaJob: string | null,
+}
 
 // Formulario de trabajo
 export type JobForm = {

@@ -143,6 +143,16 @@ export const job = pgTable('job', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
+export const education = pgTable('education', {
+  id: serial('id').primaryKey(),
+  institution : varchar('institution', { length: 100 }).notNull(),
+  title : varchar('title', { length: 100 }).notNull(),
+  dateFrom: date('date_from'),
+  dateTo: date('date_to'),
+  finished: boolean('finished').default(false),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+});
+
 
 // Tabla Turn_Job
 export const turnJob = pgTable('turn_job', {
@@ -196,6 +206,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   interviews: many(interview),
   followUps: many(followUp),
   skills: many(skillsUser),
+  educations: many(education),
 }));
 
 
@@ -211,6 +222,21 @@ export const studentRelations = relations(student, ({ one }) => ({
 export const experienceRelations = relations(experience, ({ one }) => ({
   user: one(users, {
     fields: [experience.userId],
+    references: [users.id]
+  })
+}));
+
+
+export const educationRelations = relations(education, ({ one }) => ({
+  user: one(users, {
+    fields: [education.userId],
+    references: [users.id]
+  })
+}));
+
+export const skillsUserRelations = relations(skillsUser, ({ one }) => ({
+  user: one(users, {
+    fields: [skillsUser.userId],
     references: [users.id]
   })
 }));
@@ -325,9 +351,5 @@ export const locationRelations = relations(location, ({ many }) => ({
 
 export const typePlanRelations = relations(typePlan, ({ one }) => ({
   enterprise: one(enterprise),
-}));
-
-export const skillsUserRelations = relations(skillsUser, ({ one }) => ({
-  users: one(users),
 }));
 

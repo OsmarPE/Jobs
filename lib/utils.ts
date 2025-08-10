@@ -73,3 +73,32 @@ export const getUserByToken = async() => {
     // const user = jwt.verify(token.value, process.env.SECRET_KEY!);
     return null;
 }
+
+export const formatPhone = (phone: string) => {
+
+  const regex = /^\+?([0-9]{10,12})/
+
+  const isValidPhone = regex.test(phone);
+  
+  if (!isValidPhone) return phone;
+
+  if (phone.startsWith('+')){
+    const separateNumber = phone.replace(/^(\+\d{2})(\d{10})$/, "$1 $2");
+    const onlyNumber = separateNumber.split(' ')[1]
+    const newPhone = onlyNumber?.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
+    return newPhone
+  }
+  const cellPhone = phone.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
+  return cellPhone;
+}
+
+export const getDateProfile = (date: string | null) => {
+  if (!date) return null;
+  const dateFormat = new Date(date);
+  const newDate = dateFormat.toLocaleDateString('es-MX',{
+    month: 'short',
+    year: 'numeric'
+  });
+  return  newDate
+
+}

@@ -1,16 +1,14 @@
 
 import Job from "@/components/jobs/Job";
 import JobAuthWarning from "@/components/jobs/JobAuthWarning";
+import { getJobs } from "@/src/schemas/job";
 import { JobType  } from "@/types";
 
-export default async function Jobs({ auth }: { auth: string }) {
+export default async function Jobs({ auth, typeJob,location}: { auth?: string, location?: number, typeJob?: number }) {
     
-    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/job',{
-        cache: 'no-cache',
-    })
-    const data = await response.json()
-    const jobs = data.message as JobType[]
-
+    const data = await getJobs({typeJob,location})
+    const jobs = data as unknown as JobType[]
+    
     
     return (
         <section className="jobs__results">

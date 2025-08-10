@@ -1480,7 +1480,7 @@ body.hidden-scroll::-webkit-scrollbar {
 .education {
     margin-top: 1rem;
     display: grid;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .experience__item,
@@ -1527,7 +1527,7 @@ body.hidden-scroll::-webkit-scrollbar {
     gap: .125rem;
 }
 
-.skills {
+.skills, .languages {
     margin-top: 1rem;
     display: flex;
     flex-wrap: wrap;

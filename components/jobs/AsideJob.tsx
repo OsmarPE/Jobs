@@ -1,8 +1,46 @@
+'use client'
 import { Briefcase, CreditCard, Map } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
+import { useURLParams } from '@/hooks/use-params-url'
 
 export default function AsideJob() {
+    const [selectedJobType, setSelectedJobType] = useState<number | null>(null)
+    const [selectedJobRange, setSelectedJobRange] = useState<string | null >(null)
+    const [selectedJobLocation, setSelectedJobLocation] = useState<number | null>(null)
+
+    const { updateParams, getParam } = useURLParams()
+
+    const handleJobTypeChange = (value: number | null) => {
+        setSelectedJobType(value)
+        updateParams({ typeJob: value?.toString() ?? '' })
+    }
+
+    const handleChangeLocation = (value: number | null) => {
+        setSelectedJobLocation(value)
+        updateParams({ location: value?.toString() ?? '' })
+    }
+
+    useEffect(() => {
+        const typeJobFromURL = getParam('typeJob')
+        if (typeJobFromURL) {
+            setSelectedJobType(+typeJobFromURL)
+        }
+    }, [])
+
+    const countries = [
+        { id:1,name: 'Mexico', code: 'MX' },
+        { id:2,name: 'Ingles', code: 'EN' },
+        { id:3,name: 'Frances', code: 'FR' },
+        { id:4,name: 'Argentina', code: 'AR' },
+    ]
+
+    const typesJob = [
+        { id: 1, name: "Presencial" },
+        { id: 2, name: "En línea" },
+        { id: 3, name: "Híbrido" }
+    ];
+
     return (
         <aside className="jobs__aside">
             <div className="jobs__aside-section">
@@ -11,22 +49,16 @@ export default function AsideJob() {
                     Lenguajes
                 </h2>
                 <ul className="jobs__aside-list">
-                    <li className="jobs__aside-item">
-                        <Checkbox name="language" id="web-dev" value="web-dev" />
-                        <label htmlFor="web-dev">Mexico</label>
-                    </li>
-                    <li className="jobs__aside-item">
-                        <Checkbox name="language" id="web-dev" value="web-dev" />
-                        <label htmlFor="web-dev">Ingles</label>
-                    </li>
-                    <li className="jobs__aside-item">
-                        <Checkbox name="language" id="web-dev" value="web-dev" />
-                        <label htmlFor="web-dev">Frances</label>
-                    </li>
-                    <li className="jobs__aside-item">
-                        <Checkbox name="language" id="web-dev" value="web-dev" />
-                        <label htmlFor="web-dev">Argentina</label>
-                    </li>
+                    {
+
+                        countries.map((country, index) => (
+                            <li className="jobs__aside-item" key={index}>
+                                <Checkbox name={country.code} id={country.code} checked={selectedJobLocation === country.id} onCheckedChange={(state) => handleChangeLocation(state ? country.id : null)} />
+                                <label htmlFor={country.code}>{country.name}</label>
+                            </li>
+                        ))
+                    }
+
                 </ul>
             </div>
             <div className="jobs__aside-section">
@@ -35,14 +67,14 @@ export default function AsideJob() {
                     Tipo de trabajo
                 </h2>
                 <ul className="jobs__aside-list">
-                    <li className="jobs__aside-item">
-                        <Checkbox name="language" id="web-dev" value="web-dev" />
-                        <label htmlFor="web-dev">Presencial</label>
-                    </li>
-                    <li className="jobs__aside-item">
-                        <Checkbox name="language" id="web-dev" value="web-dev" />
-                        <label htmlFor="web-dev">En linea</label>
-                    </li>
+                    {
+                        typesJob.map((typeJob, index) => (
+                            <li className="jobs__aside-item" key={index}>
+                                <Checkbox name={typeJob.name} id={typeJob.name} checked={selectedJobType === typeJob.id} onCheckedChange={(state) => handleJobTypeChange( state ? typeJob.id : null)} />
+                                <label htmlFor={typeJob.name}>{typeJob.name}</label>
+                            </li>
+                        ))
+                    }
                 </ul>
             </div>
             <div className="jobs__aside-section">
