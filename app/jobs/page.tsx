@@ -8,6 +8,12 @@ import Jobs from "@/pages/jobs/Jobs";
 import LoadingJobs from "@/components/jobs/LoadingJobs";
 import SearchJob from "@/components/jobs/SearchJob";
 import { Suspense } from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Jobs Easy | Trabajos',
+  description: 'Encuentra el trabajo de tu sueño en Jobs Easy',
+}
 
 export default async function page({ searchParams }: { searchParams: Promise<{ auth?: string, typeJob?: string, location?: string }> }) {
 

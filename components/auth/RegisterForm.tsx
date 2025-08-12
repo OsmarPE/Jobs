@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { Lock } from "lucide-react";
 import Link from "next/link";
+import FormSubmit from "../ui/form-submit";
 
 const user = z.object({
   name: z.string().min(1, { message: "Debes ingresar un nombre" }),
@@ -103,7 +104,7 @@ export default function RegisterForm({setSendedEmailConfirm}:{setSendedEmailConf
                   type="password"
                 />
 
-                <Button className="h-11 mt-4">Crear cuenta</Button>
+                 <FormSubmit loading={form.formState.isSubmitting} className="h-11 mt-4">Crear cuenta</FormSubmit>
               </form>
             </Form>
             <p className='text-center text-sm mt-4'> ¿No tienes cuenta? <Link href="/auth/login" className="text-secundary-landing hover:underline">Inicia sesión</Link></p>

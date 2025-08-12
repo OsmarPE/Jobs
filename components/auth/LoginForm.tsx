@@ -8,6 +8,7 @@ import { Form } from "../ui/form";
 import FormItem from "./FormItem";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import FormSubmit from "../ui/form-submit";
 
 const user = z.object({
   email: z.string().email({ message: "Ingresa tu correo electronico" }),
@@ -63,8 +64,7 @@ export default function LoginForm({originPath}:{originPath:string}) {
           placeholder="••••••••••••••"
           type="password"
         />
-
-        <Button className="h-11 mt-4">Iniciar sesión</Button>
+        <FormSubmit loading={form.formState.isSubmitting} className="h-11">Iniciar sesión</FormSubmit>
       </form>
     </Form>
   );

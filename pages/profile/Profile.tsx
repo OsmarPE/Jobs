@@ -1,9 +1,13 @@
 import LinkedIn from "@/img/linkedin.png";
-import { Mail, Pencil, Phone, UserRound } from "lucide-react";
+import { Box, GraduationCap, Languages, Mail, Pencil, Phone, Plus, UserRound } from "lucide-react";
 import BreadcrumbLinks from "../../components/layout/BreadcrumbLinks";
 
 import { formatPhone, getDateProfile } from "@/lib/utils";
 import { UserWithRelations } from "@/types";
+import ProfileExperienceActions from "./ProfileExperienceActions";
+import ProfileEducationActions from "./ProfileEducationActions";
+import ProfileSkillsActions from "./ProfileSkillsActions";
+import ProfileLanguagesActions from "./ProfileLanguagesActions";
 
 export default function Profile({user}: { user: UserWithRelations }) {
 
@@ -65,9 +69,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
             <article className="profile__card">
                 <div className="profile__row">
                     <h2 className="profile__subtitle">Experiencia</h2>
-                    <button className="profile__edit">
-                        <Pencil />
-                    </button>
+                    <ProfileExperienceActions />
                 </div>
                 <ul className="experience">
                     {experiences?.map((experience) => (
@@ -80,7 +82,6 @@ export default function Profile({user}: { user: UserWithRelations }) {
                                 <span className="experience__text">{experience?.areaJob}</span>
                                 <span> • </span>
                                 <span className="experience__text capitalize">{getDateProfile(experience?.dateFrom)} - {getDateProfile(experience?.dateTo)}</span>
-                                
                             </div>
                         </div>
                     </li>
@@ -91,10 +92,8 @@ export default function Profile({user}: { user: UserWithRelations }) {
             </article>
              <article className="profile__card">
                 <div className="profile__row">
-                    <h2 className="profile__subtitle">Educacion</h2>
-                    <button className="profile__edit">
-                        <Pencil />
-                    </button>
+                    <h2 className="profile__subtitle"><GraduationCap width={14} />Educacion</h2>
+                    <ProfileEducationActions />
                 </div>
                    <ul className="education">
                     {
@@ -114,10 +113,8 @@ export default function Profile({user}: { user: UserWithRelations }) {
             </article>
              <article className="profile__card">
                 <div className="profile__row">
-                    <h2 className="profile__subtitle">Habilidades</h2>
-                    <button className="profile__edit">
-                        <Pencil />
-                    </button>
+                    <h2 className="profile__subtitle"><Box width={14} />Habilidades</h2>
+                    <ProfileSkillsActions />
                 </div>
                  <ul className="skills">
                     {
@@ -132,10 +129,11 @@ export default function Profile({user}: { user: UserWithRelations }) {
             </article>
              <article className="profile__card">
                 <div className="profile__row">
-                    <h2 className="profile__subtitle">Habilidades</h2>
-                    <button className="profile__edit">
-                        <Pencil />
-                    </button>
+                    <h2 className="profile__subtitle">
+                        <Languages width={14} />
+                        Idiomas
+                    </h2>
+                    <ProfileLanguagesActions />
                 </div>
                  <ul className="languages">
                     {
