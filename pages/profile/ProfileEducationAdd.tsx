@@ -2,41 +2,30 @@ import FormDatePicker from "@/components/auth/FormDatePicker";
 import FormItem from "@/components/auth/FormItem";
 import FormSwitch from "@/components/auth/FormSwitch";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form";
 import FormSubmit from "@/components/ui/form-submit";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { educationSchema } from "@/lib/validations/profile";
+import { createEducationAction } from "@/actions/education";
+import { toast } from "sonner";
 
+export default function ProfileEducationAdd({open, userId}: {open: boolean, userId: number}) {
 
-
-export const education = z.object({
-  institution: z.string().min(1, { message: "Ingresa tu escuela donde cursas o desarrollas tu carrera" }),
-  title: z.string().min(1, { message: "Ingresa tu carrera o nivel educativo" }),
-  dateFrom: z.string().min(1, { message: "La fecha de inicio no puede estar vacía" }),
-  dateTo: z.string().optional(),
-  finished: z.boolean(),
-});
-
-export default function ProfileEducationAdd({open}: {open: boolean}) {
-
-    const search = useSearchParams()
-    const id = search?.get('id')
 
     const router = useRouter()
 
     const form = useForm({
-        resolver: zodResolver(education),
+        resolver: zodResolver(educationSchema),
         defaultValues: {
             dateFrom: '',
             dateTo: '',
@@ -46,8 +35,24 @@ export default function ProfileEducationAdd({open}: {open: boolean}) {
         },
     });
 
-    const onSubmit = async (data: z.infer<typeof education>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof educationSchema>) => {
+        const response = await createEducationAction({
+            ...data,
+            userId
+        });
+
+        const { success, message } = response;
+
+        if (!success) {
+            toast.error(message);
+            return;
+        }
+
+        toast.success(message);
+
+        router.back();
+        form.reset();
+
     };
     
     const handleCancel = () => {
@@ -59,9 +64,9 @@ export default function ProfileEducationAdd({open}: {open: boolean}) {
         <Dialog open={open} onOpenChange={() => router.back()}>
             <DialogContent className="bg-background-landing">
                 <DialogHeader>
-                    <DialogTitle>Añadir experiencia</DialogTitle>
+                    <DialogTitle>Añadir Formación Académica</DialogTitle>
                     <DialogDescription>
-                        Ingresa tu experiencia profesional que has desarrollado durante los ultimos años. Cuenta tu experiencia en el trabajo, eventos, logros, etc.
+                        Registra tu historial académico incluyendo títulos, certificaciones y estudios realizados.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -71,27 +76,27 @@ export default function ProfileEducationAdd({open}: {open: boolean}) {
                             control={form.control}
                             name="title"
                             label="Titulo"
-                            placeholder="Desarrollo de software"
+                            placeholder="Ej: Ingeniería en Sistemas"
                         />
 
                         <FormItem
                             control={form.control}
                             name="institution"
                             label="Institución o escuela"
-                            placeholder="Instituto Tecnológico de Buenos Aires"
+                            placeholder="Ej: Universidad Nacional"
                         />
                         <div className="grid gap-4 grid-cols-2">
                             <FormDatePicker
                                 control={form.control}
                                 name="dateFrom"
                                 label="Fecha de inicio"
-                                placeholder="Fecha de inicio"
+                                placeholder="Selecciona cuando iniciaste"
                             />
                             <FormDatePicker
                                 control={form.control}
                                 name="dateTo"
                                 label="Fecha de finalización"
-                                placeholder="Fecha de finalización"
+                                placeholder="Selecciona cuando terminaste"
                             />
                         </div>
 

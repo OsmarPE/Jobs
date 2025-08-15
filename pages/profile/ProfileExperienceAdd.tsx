@@ -6,15 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
-import { Form, FormField } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import FormSubmit from "@/components/ui/form-submit";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation"
@@ -22,6 +18,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { createExperienceAction } from "@/actions/experience";
 
 const experience = z.object({
     dateFrom: z.date().or(z.string().min(1, { message: "La fecha de inicio no puede estar vacía" })),
@@ -30,7 +27,7 @@ const experience = z.object({
     area: z.string().min(1, { message: "El área no puede estar vacía" }),
     areaJob: z.string().min(1, { message: "El área de trabajo no puede estar vacía" }),
 });
-export default function ProfileExperienceAdd({open, id}: {open: boolean, id: number}) {
+export default function ProfileExperienceAdd({open, userId}: {open: boolean, userId: number}) {
 
     const router = useRouter()
 
@@ -47,27 +44,21 @@ export default function ProfileExperienceAdd({open, id}: {open: boolean, id: num
 
     const onSubmit = async (data: z.infer<typeof experience>) => {
         
-        const response = await fetch('/api/experience', {            
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                ...data,
-                userId: id,
-            }),
+        const result = await createExperienceAction({
+            ...data,
+            userId
         });
 
-        const responseData = await response.json();
-
-        if (response.status !== 200) {
-            toast.error(responseData.message);
+        if (!result.success) {
+            toast.error(result.message);
             return;
         }
 
-        toast.success(responseData.message);
-
+        toast.success(result.message);
+        
         router.back()
+
+        form.reset()
 
     };
     

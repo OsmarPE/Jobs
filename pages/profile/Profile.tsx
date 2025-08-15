@@ -69,7 +69,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
             <article className="profile__card">
                 <div className="profile__row">
                     <h2 className="profile__subtitle">Experiencia</h2>
-                    <ProfileExperienceActions  id={id} />
+                    <ProfileExperienceActions  userId={id} />
                 </div>
                 <ul className="experience">
                     {experiences?.map((experience) => (
@@ -93,7 +93,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
              <article className="profile__card">
                 <div className="profile__row">
                     <h2 className="profile__subtitle"><GraduationCap width={14} />Educacion</h2>
-                    <ProfileEducationActions />
+                    <ProfileEducationActions userId={id} />
                 </div>
                    <ul className="education">
                     {
