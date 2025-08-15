@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
 // GET - Obtener todas las habilidades
 export async function GET(request: NextRequest) {    
     try {
-        const skills = await getSkills();
+        const data = await getSkills();
         
-        if (!skills) {
+        if (!data) {
             return NextResponse.json(
             { message: 'No se encontraron habilidades' },
             { status: 404 }
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         }
     
         return NextResponse.json({
-        skills,
+        data,
         message: 'Habilidades obtenidos exitosamente',
         status: 200
         });

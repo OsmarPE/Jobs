@@ -114,7 +114,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
              <article className="profile__card">
                 <div className="profile__row">
                     <h2 className="profile__subtitle"><Box width={14} />Habilidades</h2>
-                    <ProfileSkillsActions />
+                    <ProfileSkillsActions userId={id} />
                 </div>
                  <ul className="skills">
                     {
@@ -133,7 +133,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
                         <Languages width={14} />
                         Idiomas
                     </h2>
-                    <ProfileLanguagesActions />
+                    <ProfileLanguagesActions userId={id} />
                 </div>
                  <ul className="languages">
                     {

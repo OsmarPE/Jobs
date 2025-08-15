@@ -7,102 +7,260 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import FormSubmit from "@/components/ui/form-submit";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation"
-import { useState } from "react";
-import z from "zod";
+import { Plus, X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { 
+  getAllLanguagesAction, 
+  getUserLanguagesAction, 
+  addLanguageToUserAction, 
+  removeLanguageFromUserAction 
+} from "@/actions/languages";
 
+type Language = {
+    id: number;
+    name: string;
+};
 
-
-export const education = z.object({
-    institution: z.string().min(1, { message: "Ingresa tu escuela donde cursas o desarrollas tu carrera" }),
-    title: z.string().min(1, { message: "Ingresa tu carrera o nivel educativo" }),
-    dateFrom: z.string().min(1, { message: "La fecha de inicio no puede estar vacía" }),
-    dateTo: z.string().optional(),
-    finished: z.boolean(),
-});
+type UserLanguage = {
+    userId: number;
+    languageId: number;
+    language: Language;
+};
 
 export default function ProfileLanguagesEdit({ open }: { open: boolean }) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const userId = searchParams?.get('add-languages');
+    
+    const [status, setStatus] = useState<null | 'add'>(null);
+    const [availableLanguages, setAvailableLanguages] = useState<Language[]>([]);
+    const [userLanguages, setUserLanguages] = useState<UserLanguage[]>([]);
+    const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+    const [loading, setLoading] = useState(false);
 
-    const router = useRouter()
-    const [status, setStatus] = useState<null | 'add' | 'edit'>(null)
+    // Cargar lenguajes disponibles y del usuario
+    useEffect(() => {
+        const loadData = async () => {
+            if (!userId) return;
+            try {
+                setLoading(true);
+                
+                // Cargar todos los lenguajes disponibles
+                const allLanguagesResponse = await fetch('/api/languages');
+                const res = await allLanguagesResponse.json();
+                console.log(res);
+                
+                if (allLanguagesResponse.ok && res.data) {
+                    setAvailableLanguages(res.data);
+                }
+                
+                // Cargar lenguajes del usuario
+                const userLangsResponse = await getUserLanguagesAction(Number(userId));
+                if (userLangsResponse.success && userLangsResponse.data) {
+                    setUserLanguages(userLangsResponse.data);
+                }
+                
+            } catch (error) {
+                console.error('Error loading languages:', error);
+                toast.error('Error al cargar los idiomas');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (open) {
+            loadData();
+        }
+    }, [open, userId]);
 
     const handleCancel = () => {
+        router.back();
+    };
 
-        router.back()
-    }
+    const handleAddLanguage = () => {
+        setStatus(prevStatus => prevStatus === 'add' ? null : 'add');
+        setSelectedLanguage("");
+    };
 
-    const language = [
-        { id: 1, name: 'Español' },
-        { id: 2, name: 'Inglés' },
-        { id: 3, name: 'Francés' },
-        { id: 4, name: 'Portugués' },
-        { id: 5, name: 'Italiano' },
-    ]
+    const handleSubmitLanguage = async () => {
+        if (!selectedLanguage || !userId) return;
+        
+        try {
+            setLoading(true);
+            
+            const languageId = Number(selectedLanguage);
+            
+            // Verificar si el usuario ya tiene este idioma
+            const hasLanguage = userLanguages.some(ul => ul.languageId === languageId);
+            if (hasLanguage) {
+                toast.error('Ya tienes este idioma agregado');
+                return;
+            }
+            
+            // Agregar idioma al usuario usando server action
+            const response = await addLanguageToUserAction(Number(userId), languageId);
+            
+            if (!response.success) {
+                toast.error(response.message);
+                return;
+            }
+            
+            // Recargar idiomas del usuario
+            const updatedUserLanguagesResponse = await getUserLanguagesAction(Number(userId));
+            if (updatedUserLanguagesResponse.success && updatedUserLanguagesResponse.data) {
+                setUserLanguages(updatedUserLanguagesResponse.data);
+            }
+            
+            toast.success(response.message);
+            setStatus(null);
+            setSelectedLanguage("");
+            
+        } catch (error) {
+            console.error('Error adding language:', error);
+            toast.error('Error al agregar el idioma');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const handleAddSkill = () => {
-        setStatus(prevStatus => prevStatus === 'add' ? null : 'add')
+    const handleRemoveLanguage = async (languageId: number) => {
+        if (!userId) return;
+        
+        try {
+            setLoading(true);
+            
+            const response = await removeLanguageFromUserAction(Number(userId), languageId);
+            
+            if (!response.success) {
+                toast.error(response.message);
+                return;
+            }
+            
+            // Actualizar la lista local
+            setUserLanguages(prev => prev.filter(ul => ul.languageId !== languageId));
+            
+            toast.success(response.message);
+            
+        } catch (error) {
+            console.error('Error removing language:', error);
+            toast.error('Error al eliminar el idioma');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    }
-    console.log(open);
-    
-
+    // Filtrar idiomas disponibles que el usuario no tiene
+    const availableToAdd = availableLanguages.filter(
+        lang => !userLanguages.some(ul => ul.languageId === lang.id)
+    );
     return (
         <Dialog open={open} onOpenChange={() => router.back()}>
             <DialogContent className="bg-background-landing">
                 <DialogHeader>
-                    <DialogTitle>Lenguajes</DialogTitle>
+                    <DialogTitle>Idiomas</DialogTitle>
                     <DialogDescription>
-                        Selecciona el idioma que dominas
+                        Selecciona los idiomas que dominas
                     </DialogDescription>
                 </DialogHeader>
-                <ul className="flex flex-wrap gap-3">
-                    {
-                        language?.map((language) => (
-                            <li className="language__item badge">
-                                {language?.name}
-                            </li>
-                        ))
-                    }
-                </ul>
-                   {status === 'add' && (<form>
-                    <Label className="mb-3">Añadir habilidad</Label>
-                    <Select>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Seleccionar habilidad" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Ingles</SelectLabel>
-                                <SelectItem value="spanish">Spanish</SelectItem>
-                                <SelectItem value="english">English</SelectItem>
-                                <SelectItem value="french">French</SelectItem>
-                                <SelectItem value="portuguese">Portuguese</SelectItem>
-                                <SelectItem value="italian">Italian</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                    <FormSubmit type="button" className="mt-4">Añadir</FormSubmit> 
-                </form>)}
-                <Button type="button" variant={'link'} size={'sm'} className="w-max ml-auto" onClick={handleAddSkill}>
-                    {
-                        status === 'add' ? 'Cancelar' : (
-                            <>
-                                <Plus />
-                                Añadir lenguaje
-                            </>
-                        )
-                    }
+                
+                {loading && <div>Cargando...</div>}
+                
+                {/* Lista de idiomas del usuario */}
+                <div className="space-y-3">
+                    <Label>Tus idiomas:</Label>
+                    {userLanguages.length > 0 ? (
+                        <ul className="flex flex-wrap gap-3">
+                            {userLanguages.map((userLang) => (
+                                <li 
+                                    key={userLang.languageId} 
+                                    className="language__item badge flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full"
+                                >
+                                    {userLang.language.name}
+                                    <button
+                                        onClick={() => handleRemoveLanguage(userLang.languageId)}
+                                        disabled={loading}
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-gray-500">No tienes idiomas agregados</p>
+                    )}
+                </div>
+
+                {/* Formulario para agregar idioma */}
+                {status === 'add' && (
+                    <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmitLanguage(); }}>
+                        <Label>Añadir idioma</Label>
+                        <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Seleccionar idioma" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Idiomas disponibles</SelectLabel>
+                                    {availableToAdd.map((lang) => (
+                                        <SelectItem key={lang.id} value={lang.id.toString()}>
+                                            {lang.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <div className="flex gap-2">
+                            <Button 
+                                type="button" 
+                                variant="outline" 
+                                onClick={() => setStatus(null)}
+                                disabled={loading}
+                            >
+                                Cancelar
+                            </Button>
+                            <FormSubmit 
+                                type="button" 
+                                onClick={handleSubmitLanguage}
+                                loading={loading}
+                                disabled={!selectedLanguage}
+                            >
+                                Añadir
+                            </FormSubmit>
+                        </div>
+                    </form>
+                )}
+
+                {/* Botón para mostrar/ocultar formulario */}
+                <Button 
+                    type="button" 
+                    variant={'link'} 
+                    size={'sm'} 
+                    className="w-max ml-auto" 
+                    onClick={handleAddLanguage}
+                    disabled={loading || availableToAdd.length === 0}
+                >
+                    {status === 'add' ? 'Cancelar' : (
+                        <>
+                            <Plus />
+                            Añadir idioma
+                        </>
+                    )}
                 </Button>
 
+                {availableToAdd.length === 0 && userLanguages.length > 0 && (
+                    <p className="text-gray-500 text-sm">Ya tienes todos los idiomas disponibles</p>
+                )}
+
                 <div className="flex justify-end gap-4 mt-4">
-                    <Button type="button" variant="secondaryLanding"  onClick={handleCancel}>Cancelar</Button>
-                    <FormSubmit >Editar</FormSubmit>
+                    <Button type="button" variant="secondaryLanding" onClick={handleCancel}>
+                        Cerrar
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>
-    )
+    );
 }

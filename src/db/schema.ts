@@ -54,11 +54,7 @@ export const student = pgTable('student', {
   dateTo: date('date_to'),
 });
 
-export const skillsUser = pgTable('skills_user', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
-  name : varchar('name', { length: 100 }).notNull()
-})
+
 // Tabla Experience
 export const experience = pgTable('experience', {
   id: serial('id').primaryKey(),
@@ -73,8 +69,8 @@ export const experience = pgTable('experience', {
 // Tabla Skills
 export const skills = pgTable('skills', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 100 }).notNull().unique()
-  
+  name: varchar('name', { length: 100 }).notNull().unique(),
+  userId: integer('user_id').references(() => users.id).notNull(),
 });
 
 
@@ -205,7 +201,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   languages: many(userLanguages),
   interviews: many(interview),
   followUps: many(followUp),
-  skills: many(skillsUser),
+  skills: many(skills),
   educations: many(education),
 }));
 
@@ -234,9 +230,9 @@ export const educationRelations = relations(education, ({ one }) => ({
   })
 }));
 
-export const skillsUserRelations = relations(skillsUser, ({ one }) => ({
+export const skillsUserRelations = relations(skills, ({ one }) => ({
   user: one(users, {
-    fields: [skillsUser.userId],
+    fields: [skills.userId],
     references: [users.id]
   })
 }));

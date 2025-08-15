@@ -4,7 +4,7 @@ import ProfileSkillsEdit from "./ProfileSkillsEdit";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-export default function ProfileSkillsActions() {
+export default function ProfileSkillsActions({userId}: {userId: number}) {
 
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -12,7 +12,7 @@ export default function ProfileSkillsActions() {
 
     return (
         <>
-            <button className="profile__edit" onClick={() => router.push('/profile?add-skills=true', {
+            <button className="profile__edit" onClick={() => router.push(`/profile?add-skills=${userId}`, {
                 scroll: false,
             })}>
                 <Pencil />

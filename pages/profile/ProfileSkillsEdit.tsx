@@ -1,3 +1,5 @@
+import { createSkillbyUserAction } from "@/actions/skills";
+import FormItem from "@/components/auth/FormItem";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -6,49 +8,65 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form";
 import FormSubmit from "@/components/ui/form-submit";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation"
-import { useState } from "react";
+import { skillSchema } from "@/lib/validations/skill";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 
 
-export const education = z.object({
-    institution: z.string().min(1, { message: "Ingresa tu escuela donde cursas o desarrollas tu carrera" }),
-    title: z.string().min(1, { message: "Ingresa tu carrera o nivel educativo" }),
-    dateFrom: z.string().min(1, { message: "La fecha de inicio no puede estar vacía" }),
-    dateTo: z.string().optional(),
-    finished: z.boolean(),
-});
 
 export default function ProfileSkillsEdit({ open }: { open: boolean }) {
 
     const router = useRouter()
-    const [status, setStatus] = useState<null | 'add' | 'edit'>(null)
+    const search = useSearchParams()
+    const userId = search?.get('add-skills')
 
     const handleCancel = () => {
-
         router.back()
     }
+  
+  
+    const form = useForm({
+        resolver: zodResolver(skillSchema),
+        defaultValues: {
+            name: "",
+        },
+    });
+    
 
-    const skills = [
-        { id: 1, name: 'JavaScript' },
-        { id: 2, name: 'React' },
-        { id: 3, name: 'Node.js' },
-        { id: 4, name: 'TypeScript' },
-        { id: 5, name: 'Next.js' },
-        { id: 6, name: 'Tailwind CSS' },
-    ]
+    const onSubmit = async (data: z.infer<typeof skillSchema>) => { 
+        console.log("Submitting skill data:", data);
+        
+        const response = await createSkillbyUserAction({
+            ...data,
+            userId: Number(userId),
+        }); 
+           
+        const { success, message } = response;
 
-    const handleAddSkill = () => {
-        setStatus(prevStatus => prevStatus === 'add' ? null : 'add')
+        if (!success) {
+            toast.error(message);
+            return;
+        }
+
+        toast.success(message);
+        
+        router.back();
+
+        form.reset();
 
     }
 
+    useEffect(() => {
+        form.reset();
+    }, [open]);
+ 
     return (
         <Dialog open={open} onOpenChange={() => router.back()}>
             <DialogContent className="bg-background-landing">
@@ -58,49 +76,23 @@ export default function ProfileSkillsEdit({ open }: { open: boolean }) {
                         Añade, edita o elimina tus habilidades profesionales
                     </DialogDescription>
                 </DialogHeader>
-                <ul className="flex flex-wrap gap-3">
-                    {
-                        skills?.map((skill) => (
-                            <li className="skills__item badge">
-                                {skill?.name}
-                            </li>
-                        ))
-                    }
-                </ul>
-                   {status === 'add' && (<form>
-                    <Label className="mb-3">Añadir habilidad</Label>
-                    <Select>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Seleccionar habilidad" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Fruits</SelectLabel>
-                                <SelectItem value="apple">Apple</SelectItem>
-                                <SelectItem value="banana">Banana</SelectItem>
-                                <SelectItem value="blueberry">Blueberry</SelectItem>
-                                <SelectItem value="grapes">Grapes</SelectItem>
-                                <SelectItem value="pineapple">Pineapple</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                    <FormSubmit type="button" className="mt-4">Añadir</FormSubmit> 
-                </form>)}
-                <Button type="button" variant={'link'} size={'sm'} className="w-max ml-auto" onClick={handleAddSkill}>
-                    {
-                        status === 'add' ? 'Cancelar' : (
-                            <>
-                                <Plus />
-                                Añadir habilidad
-                            </>
-                        )
-                    }
-                </Button>
-
-                <div className="flex justify-end gap-4 mt-4">
-                    <Button type="button" variant="secondaryLanding"  onClick={handleCancel}>Cancelar</Button>
-                    <FormSubmit className="">Editar</FormSubmit>
-                </div>
+    
+                  <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <FormItem
+                                control={form.control}
+                                name="name"
+                                label="Habilidad"
+                                placeholder="Nombre de la habilidad"
+                            />
+                            
+                            <div className="flex justify-end gap-4">
+                                <Button type="button" variant="secondaryLanding"  onClick={handleCancel}>Cancelar</Button>
+                                <FormSubmit loading={form.formState.isSubmitting}>Agregar</FormSubmit>
+                            </div>
+                        </form>
+                    </Form>
+          
             </DialogContent>
         </Dialog>
     )

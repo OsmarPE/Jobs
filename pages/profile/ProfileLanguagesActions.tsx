@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react"
 import ProfileLanguagesEdit from "./ProfileLanguagesEdit"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export default function ProfileLanguagesActions() {
+export default function ProfileLanguagesActions({userId}: {userId: number}) {
 
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -12,7 +12,7 @@ export default function ProfileLanguagesActions() {
 
     return (
         <>
-            <button className="profile__edit" onClick={() => router.push('/profile?add-languages=true', {
+            <button className="profile__edit" onClick={() => router.push(`/profile?add-languages=${userId}`, {
                 scroll: false,
             })}>
                 <Pencil />

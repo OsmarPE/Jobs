@@ -1,11 +1,14 @@
 
-import { eq } from 'drizzle-orm';
-import { languages } from '../db/schema';
+import { eq, and } from 'drizzle-orm';
+import { languages, userLanguages, users } from '../db/schema';
 import { db } from '..';
 
 export type Languages = typeof languages.$inferSelect;
 export type NewLanguages = typeof languages.$inferInsert;
 export type UpdateLanguages = Partial<NewLanguages>;
+
+export type UserLanguages = typeof userLanguages.$inferSelect;
+export type NewUserLanguages = typeof userLanguages.$inferInsert;
 
 
 export const  getLanguages = async (): Promise<Languages[]> => {
@@ -75,5 +78,62 @@ export const deleteLanguages = async (id: Languages['id']) => {
     return data;
   } catch (error) {
     throw new Error(`Error deleting languages: ${error}`);
+  }
+}
+
+// Funciones para manejar user_languages
+export const getUserLanguages = async (userId: number) => {
+  try {
+    const data = await db
+      .query
+      .users
+      .findFirst({
+        where: eq(users.id, userId),
+        with: {
+          languages: {
+            with: {
+              language: true
+            }
+          }
+        }
+      });
+    
+    return data?.languages || [];
+  } catch (error) {
+    throw new Error(`Error fetching user languages: ${error}`);
+  }
+}
+
+export const addLanguageToUser = async (userId: number, languageId: number) => {
+  try {
+    const data = await db
+      .insert(userLanguages)
+      .values({
+        userId,
+        languageId
+      })
+      .returning();
+     
+    return data[0];
+  } catch (error) {
+    throw new Error(`Error adding language to user: ${error}`);
+  }
+}
+
+export const removeLanguageFromUser = async (userId: number, languageId: number) => {
+  try {
+    const data = await db
+      .delete(userLanguages)
+      .where(
+        and(
+          eq(userLanguages.userId, userId),
+          eq(userLanguages.languageId, languageId)
+        )
+      )
+      .returning();
+     
+    return data[0];
+  } catch (error) {
+    throw new Error(`Error removing language from user: ${error}`);
   }
 }

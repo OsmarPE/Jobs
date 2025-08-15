@@ -2,7 +2,6 @@
 import { Pencil, Plus } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
-import ProfileEducationAdd from './ProfileEducationAdd'
 import ProfileExperienceAdd from './ProfileExperienceAdd'
 
 export default function ProfileExperienceActions({userId}: {userId: number}) {
