@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation"
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const experience = z.object({
@@ -29,7 +30,7 @@ const experience = z.object({
     area: z.string().min(1, { message: "El área no puede estar vacía" }),
     areaJob: z.string().min(1, { message: "El área de trabajo no puede estar vacía" }),
 });
-export default function ProfileExperienceAdd({open}: {open: boolean}) {
+export default function ProfileExperienceAdd({open, id}: {open: boolean, id: number}) {
 
     const router = useRouter()
 
@@ -45,7 +46,29 @@ export default function ProfileExperienceAdd({open}: {open: boolean}) {
     });
 
     const onSubmit = async (data: z.infer<typeof experience>) => {
-        console.log(data);
+        
+        const response = await fetch('/api/experience', {            
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...data,
+                userId: id,
+            }),
+        });
+
+        const responseData = await response.json();
+
+        if (response.status !== 200) {
+            toast.error(responseData.message);
+            return;
+        }
+
+        toast.success(responseData.message);
+
+        router.back()
+
     };
     
     const handleCancel = () => {

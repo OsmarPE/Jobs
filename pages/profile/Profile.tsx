@@ -11,7 +11,7 @@ import ProfileLanguagesActions from "./ProfileLanguagesActions";
 
 export default function Profile({user}: { user: UserWithRelations }) {
 
-    const { name, email, phone, cv, experiences , educations} = user;
+    const { id, name, email, phone, cv, experiences , educations} = user;
 
 
   return (
@@ -69,7 +69,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
             <article className="profile__card">
                 <div className="profile__row">
                     <h2 className="profile__subtitle">Experiencia</h2>
-                    <ProfileExperienceActions />
+                    <ProfileExperienceActions  id={id} />
                 </div>
                 <ul className="experience">
                     {experiences?.map((experience) => (

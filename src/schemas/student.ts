@@ -1,6 +1,6 @@
 
 import { eq } from 'drizzle-orm';
-import { student } from '../db/schema';
+import { student, users } from '../db/schema';
 import { db } from '..';
 
 
@@ -23,6 +23,34 @@ export const getStudents = async () => {
     }
 }
 
+// Obtener estudiantes con información del usuario relacionado
+export const getStudentsWithUser = async () => {
+    try {
+        const data = await db
+            .select({
+                id: student.id,
+                userId: student.userId,
+                name: student.name,
+                grade: student.grade,
+                dateFrom: student.dateFrom,
+                dateTo: student.dateTo,
+                user: {
+                    id: users.id,
+                    name: users.name,
+                    email: users.email,
+                    phone: users.phone,
+                    avatar: users.avatar
+                }
+            })
+            .from(student)
+            .leftJoin(users, eq(student.userId, users.id));
+
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getStudentById = async (id: Student['id']) => {
     try {
         
@@ -38,17 +66,32 @@ export const getStudentById = async (id: Student['id']) => {
     }
 }
 
-export const createStudent = async ({name,grade,dateFrom,dateTo,skills}:NewStudent) => {
+export const getStudentByUserId = async (userId: NonNullable<Student['userId']>) => {
+    try {
+        
+        const data = await db
+            .select()
+            .from(student)
+            .where(eq(student.userId, userId));
+
+        return data;
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const createStudent = async ({userId, name, grade, dateFrom, dateTo}: NewStudent) => {
     
     try {
         const data = await db
             .insert(student)
             .values({
+                userId,
                 name,
                 grade,
                 dateFrom,
-                dateTo,
-                skills
+                dateTo
             });
 
         return data
@@ -68,17 +111,17 @@ export const deleteStudent = async (id: Student['id']) => {
         throw new Error(`Error deleting student: ${error}`);
     }
 }
-export const updateStudent = async (id: Student['id'], {name,grade,dateFrom,dateTo,skills}:UpdateStudent) => {
+export const updateStudent = async (id: Student['id'], {userId, name, grade, dateFrom, dateTo}: UpdateStudent) => {
 
     try {
         const data = await db
             .update(student)
             .set({
+                userId,
                 name,
                 grade,
                 dateFrom,
-                dateTo,
-                skills
+                dateTo
             })
             .where(eq(student.id, id));
 

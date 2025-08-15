@@ -14,7 +14,7 @@ import {
 import { Form } from "@/components/ui/form";
 import FormSubmit from "@/components/ui/form-submit";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form";
 import z from "zod";
 
@@ -29,6 +29,9 @@ export const education = z.object({
 });
 
 export default function ProfileEducationAdd({open}: {open: boolean}) {
+
+    const search = useSearchParams()
+    const id = search?.get('id')
 
     const router = useRouter()
 
