@@ -13,7 +13,6 @@ import SkeletonUserDetails from "./skeleton/SkeletonUserDetails";
 export default function ProfileUserEdit({ userId }: { userId: number }) {
     
     const router = useRouter();
-    const [editable, setEditable] = useState(false);
     const [user, setUser] = useState<null | User>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -41,7 +40,7 @@ export default function ProfileUserEdit({ userId }: { userId: number }) {
             }
             toast.success(message)
             router.refresh();
-            setEditable(false);
+            router.back();
         }
     };
 
@@ -50,7 +49,7 @@ export default function ProfileUserEdit({ userId }: { userId: number }) {
         const a:any = {...user}
         a[name] = e.target.value
         setUser(a)
-
+        
     }
 
     
@@ -69,7 +68,6 @@ export default function ProfileUserEdit({ userId }: { userId: number }) {
                             <ProfileUserEditItem handleChange={(e) => handleChangeUser(e, 'phone')} label="Telefono" input={user?.phone ?? ''} />
                         </div>
                         <DialogFooter className="gap-4">
-                            {editable && <Button variant={'secondaryLanding'} onClick={() => setEditable(false)}>Cancelar</Button>}
                             <Button  onClick={handleSubmit}>Guardar</Button>
                         </DialogFooter>
                     </>
