@@ -16,9 +16,9 @@ export async function GET(
       );
     }
 
-    const experiences = await getExperiencesByUserId(userId);
+    const data = await getExperiencesByUserId(userId);
 
-    if (!experiences || experiences.length === 0) {
+    if (!data || data.length === 0) {
       return NextResponse.json(
         { message: 'No se encontraron experiencias para este usuario' },
         { status: 404 }
@@ -26,7 +26,7 @@ export async function GET(
     }
 
     return NextResponse.json({
-      experiences,
+      data,
       message: 'Experiencias obtenidas exitosamente',
       status: 200
     });

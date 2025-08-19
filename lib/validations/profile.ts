@@ -10,12 +10,11 @@ export const educationSchema = z.object({
 });
 
 export const experienceSchema = z.object({
-  company: z.string().min(1, { message: "Ingresa el nombre de la empresa" }),
-  position: z.string().min(1, { message: "Ingresa el cargo o posición" }),
-  description: z.string().min(10, { message: "Describe brevemente tus responsabilidades (mínimo 10 caracteres)" }),
-  dateFrom: z.date().or(z.string().min(1, { message: "La fecha de inicio no puede estar vacía" })),
-  dateTo: z.date().or(z.string().optional()),
-  current: z.boolean(),
+    dateFrom: z.date().or(z.string().min(1, { message: "La fecha de inicio no puede estar vacía" })),
+    dateTo: z.date().or(z.string().min(1, { message: "La fecha de fin no puede estar vacía" })),
+    currentJob: z.boolean(),
+    area: z.string().min(1, { message: "El área no puede estar vacía" }),
+    areaJob: z.string().min(1, { message: "El área de trabajo no puede estar vacía" }),
 });
 
 export const profileUpdateSchema = z.object({

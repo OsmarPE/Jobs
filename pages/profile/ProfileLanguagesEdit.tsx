@@ -161,13 +161,12 @@ export default function ProfileLanguagesEdit({ open }: { open: boolean }) {
         <Dialog open={open} onOpenChange={() => router.back()}>
             <DialogContent className="bg-background-landing">
                 <DialogHeader>
-                    <DialogTitle>Idiomas</DialogTitle>
+                    <DialogTitle>Lenguajes</DialogTitle>
                     <DialogDescription>
-                        Selecciona los idiomas que dominas
+                        Selecciona los lenguajes que dominas para mejorar tu perfil.
                     </DialogDescription>
                 </DialogHeader>
-                
-                {loading && <div>Cargando...</div>}
+            
                 
                 {/* Lista de idiomas del usuario */}
                 <div className="space-y-3">
@@ -177,15 +176,16 @@ export default function ProfileLanguagesEdit({ open }: { open: boolean }) {
                             {userLanguages.map((userLang) => (
                                 <li 
                                     key={userLang.languageId} 
-                                    className="language__item badge flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full"
+                                    className="language__item badge relative"
                                 >
                                     {userLang.language.name}
-                                    <button
+                                    {!status && <button
+                                        className="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-background-landing text-white size-5 grid place-items-center"
                                         onClick={() => handleRemoveLanguage(userLang.languageId)}
                                         disabled={loading}
                                     >
-                                        <X size={14} />
-                                    </button>
+                                        <X size={10} />
+                                    </button>}
                                 </li>
                             ))}
                         </ul>
@@ -213,15 +213,7 @@ export default function ProfileLanguagesEdit({ open }: { open: boolean }) {
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
-                        <div className="flex gap-2">
-                            <Button 
-                                type="button" 
-                                variant="outline" 
-                                onClick={() => setStatus(null)}
-                                disabled={loading}
-                            >
-                                Cancelar
-                            </Button>
+                        <div className="flex gap-2 justify-end">
                             <FormSubmit 
                                 type="button" 
                                 onClick={handleSubmitLanguage}
@@ -237,7 +229,7 @@ export default function ProfileLanguagesEdit({ open }: { open: boolean }) {
                 {/* Botón para mostrar/ocultar formulario */}
                 <Button 
                     type="button" 
-                    variant={'link'} 
+                    variant={'ghost'} 
                     size={'sm'} 
                     className="w-max ml-auto" 
                     onClick={handleAddLanguage}

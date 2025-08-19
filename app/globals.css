@@ -1407,6 +1407,11 @@ body.hidden-scroll::-webkit-scrollbar {
     color: var(--color-secondary);
 }
 
+.profile__name{
+    font-family: var(--font-secondary);
+
+}
+
 .my-jobs__name--italic {
     font-family: var(--font-secondary);
     font-style: italic;
@@ -1485,6 +1490,17 @@ body.hidden-scroll::-webkit-scrollbar {
     margin-top: 1rem;
     display: grid;
     gap: 1.5rem;
+}
+
+.experience__body, .education__body{
+    flex: 1;
+}
+
+.experience__heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
 }
 
 .experience__item,

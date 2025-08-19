@@ -55,7 +55,10 @@ export async function PUT(
 
     if (isNaN(experienceId)) {
       return NextResponse.json(
-        { message: 'ID de experiencia inválido' },
+        { message: 'ID de experiencia inválido',
+          success: false,
+          data: null
+         },
         { status: 400 }
       );
     }
@@ -65,7 +68,10 @@ export async function PUT(
     // Validaciones específicas
     if (data.dateFrom && !data.dateFrom) {
       return NextResponse.json(
-        { message: 'La fecha de inicio no puede estar vacía' },
+        { message: 'La fecha de inicio no puede estar vacía',
+          success: false,
+          data: null
+        },
         { status: 400 }
       );
     }
@@ -73,7 +79,10 @@ export async function PUT(
     // Validar que si currentJob es false, debe tener dateTo
     if (data.currentJob === false && !data.dateTo) {
       return NextResponse.json(
-        { message: 'La fecha de fin es requerida si no es trabajo actual' },
+        { message: 'La fecha de fin es requerida si no es trabajo actual',
+          success: false,
+          data: null
+        },
         { status: 400 }
       );
     }
@@ -88,7 +97,7 @@ export async function PUT(
     const existingExperience = await getExperienceById(experienceId);
     if (!existingExperience || existingExperience.length === 0) {
       return NextResponse.json(
-        { message: 'Experiencia no encontrada' },
+        { message: 'Experiencia no encontrada', success: false, data: null },
         { status: 404 }
       );
     }
@@ -97,20 +106,21 @@ export async function PUT(
 
     if (!result.rowCount) {
       return NextResponse.json(
-        { message: 'No se pudo actualizar la experiencia' },
+        { message: 'No se pudo actualizar la experiencia', success: false, data: null },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
       message: 'Experiencia actualizada exitosamente',
-      status: 200
+      success: true,
+      data: null
     });
 
   } catch (error) {
     console.error('Error updating experience:', error);
     return NextResponse.json(
-      { message: 'Error interno del servidor al actualizar experiencia' },
+      { message: 'Error interno del servidor al actualizar experiencia', success: false, data: null },
       { status: 500 }
     );
   }

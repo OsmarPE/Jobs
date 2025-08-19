@@ -1,5 +1,5 @@
 import LinkedIn from "@/img/linkedin.png";
-import { Box, GraduationCap, Languages, Mail, Pencil, Phone, Plus, UserRound } from "lucide-react";
+import { Box, GraduationCap, Languages, Mail, Paperclip, Pencil, Phone, Plus, UserRound, Zap } from "lucide-react";
 import BreadcrumbLinks from "../../components/layout/BreadcrumbLinks";
 
 import { formatPhone, getDateProfile } from "@/lib/utils";
@@ -8,6 +8,7 @@ import ProfileExperienceActions from "./ProfileExperienceActions";
 import ProfileEducationActions from "./ProfileEducationActions";
 import ProfileSkillsActions from "./ProfileSkillsActions";
 import ProfileLanguagesActions from "./ProfileLanguagesActions";
+import ProfileUserAction from "./ProfileUserAction";
 
 export default function Profile({user}: { user: UserWithRelations }) {
 
@@ -28,15 +29,13 @@ export default function Profile({user}: { user: UserWithRelations }) {
                 <h1 className="profile__name">{name}</h1>
                 <p className="profile__description">Ingeniero en sistemas computacionales</p>
             </div>
-            <button className="profile__btn btn btn--small">
-                Editar
-            </button>
+            <ProfileUserAction userId={id} />
         </div>
 
         <div className="profile__information">
             <article className="profile__card">
                 <div className="profile__row">
-                    <h2 className="profile__subtitle">Informacion General</h2>
+                    <h2 className="profile__subtitle"> <UserRound width={14} /> Informacion General</h2>
                     <button className="profile__edit">
                         <UserRound />
                     </button>
@@ -58,7 +57,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
             </article>
             <article className="profile__card">
                 <div className="profile__row">
-                    <h2 className="profile__subtitle">Curriculum</h2>
+                    <h2 className="profile__subtitle"><Paperclip width={14} /> Curriculum</h2>
                     <button className="profile__edit">
                         <Pencil />
                     </button>
@@ -68,7 +67,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
             </article>
             <article className="profile__card">
                 <div className="profile__row">
-                    <h2 className="profile__subtitle">Experiencia</h2>
+                    <h2 className="profile__subtitle"><Zap width={14} /> Experiencia</h2>
                     <ProfileExperienceActions  userId={id} />
                 </div>
                 <ul className="experience">
