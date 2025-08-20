@@ -1,4 +1,5 @@
 import { Experience } from '@/src/schemas/experience';
+import { User } from '@/src/schemas/user';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Tipos para las respuestas de la API
@@ -115,15 +116,18 @@ class ApiService {
   }
 
   // Subir archivos
-  async uploadFile<T = any>(url: string, file: File, onProgress?: (progress: number) => void): Promise<ApiResponse<T>> {
+  async uploadFile<T = any>(url: string, file: File, userId: number, onProgress?: (progress: number) => void): Promise<ApiResponse<T>> {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('id', userId.toString());
+      console.log(file);
+      
 
       const config: AxiosRequestConfig = {
-        headers: {
+        headers: { 
           'Content-Type': 'multipart/form-data',
-        },
+         },
         onUploadProgress: (progressEvent) => {
           if (onProgress && progressEvent.total) {
             const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -131,8 +135,9 @@ class ApiService {
           }
         },
       };
+console.log(url);
 
-      const response = await apiClient.post<ApiResponse<T>>(url, formData, config);
+      const response = await apiClient.put<ApiResponse<T>>(url, formData, config);
       return response.data;
     } catch (error: any) {
       throw this.handleError(error);
@@ -171,9 +176,10 @@ export const jobsApi = {
 
   // Users
   getAllUsers: () => api.get('/users'),
-  getUserById: (id: string) => api.get(`/users/${id}`),
+  getUserById: (id: string) => api.get<User>(`/users/${id}`),
   updateUser: (id: string, userData: any) => api.put(`/users/${id}`, userData),
   deleteUser: (id: string) => api.delete(`/users/${id}`),
+  sendUserCV: (id: number, file: File, onProgress?: (progress: number) => void) => api.uploadFile(`/users/cv/upload`, file, id, onProgress),
 
   // Enterprises
   getAllEnterprises: () => api.get('/enterprise'),

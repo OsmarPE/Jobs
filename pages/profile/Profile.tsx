@@ -9,6 +9,7 @@ import ProfileEducationActions from "./ProfileEducationActions";
 import ProfileSkillsActions from "./ProfileSkillsActions";
 import ProfileLanguagesActions from "./ProfileLanguagesActions";
 import ProfileUserAction from "./ProfileUserAction";
+import ProfileCVAction from "./ProfileCVAction";
 
 export default function Profile({user}: { user: UserWithRelations }) {
 
@@ -58,9 +59,7 @@ export default function Profile({user}: { user: UserWithRelations }) {
             <article className="profile__card">
                 <div className="profile__row">
                     <h2 className="profile__subtitle"><Paperclip width={14} /> Curriculum</h2>
-                    <button className="profile__edit">
-                        <Pencil />
-                    </button>
+                    <ProfileCVAction userId={id} />
                 </div>
                 <p className="profile__text">{cv || 'Sin curriculum'}</p>
                 
