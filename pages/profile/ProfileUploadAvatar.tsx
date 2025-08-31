@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import SkeletonCVUpload from './skeleton/SkeletonCVUpload'
 
-export default function ProfileCVEdit({ userId }: { userId: number }) {
+export default function ProfileUploadAvatar({ userId, close }: { userId: number, close: () => void }) {
 
   const router = useRouter()
   const [file, setFile] = useState<File | null | undefined>(undefined)
@@ -18,7 +18,7 @@ export default function ProfileCVEdit({ userId }: { userId: number }) {
     const { data } = await jobsApi.getUserById(userId.toString())
     try {
 
-    const fileName = data?.cv;
+    const fileName = data?.avatar;
     
     if (!fileName) {
       setFile(null);
@@ -31,7 +31,7 @@ export default function ProfileCVEdit({ userId }: { userId: number }) {
     setFile(newFile);
 
   } catch (error) {
-    toast.error("Error al cargar el CV");
+    toast.error("Error al cargar la foto de perfil");
   }
  
 }
@@ -52,7 +52,7 @@ export default function ProfileCVEdit({ userId }: { userId: number }) {
     formData.append('id', userId.toString());
 
     try {
-      const { message, success } = await jobsApi.sendUserCV(userId, file, (progress) => setProgress(progress));
+      const { message, success } = await jobsApi.sendUserAvatar(userId, file, (progress) => setProgress(progress));
 
       if (!success) {
         toast.error(message);
@@ -71,17 +71,17 @@ export default function ProfileCVEdit({ userId }: { userId: number }) {
   }
 
   return (
-    <Dialog open onOpenChange={(open) => !open && router.back()}>
+    <Dialog open onOpenChange={(open) => !open && close()}>
       <DialogContent className='bg-background-landing'>
-        <DialogTitle>Editar Curriculum</DialogTitle>
+        <DialogTitle>Foto de perfil</DialogTitle>
         <DialogDescription>
-          Aqui puedes editar tu curriculum.
+          Añade una foto de perfil para que los reclutadores puedan conocerte mejor.
         </DialogDescription>
         <div className='mt-4'>
           { file !== undefined ? <DragAndDrop
             onFileSelect={(file) => setFile(file)}
             onFileRemove={() => setFile(null)}
-            acceptedTypes={['.pdf']}
+            acceptedTypes={['.jpg', '.jpeg', '.png']}
             files={file ? [file] : []}
             maxSizeInMB={10}
           /> : <SkeletonCVUpload />}

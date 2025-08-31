@@ -1,5 +1,6 @@
 import { Experience } from '@/src/schemas/experience';
 import { User } from '@/src/schemas/user';
+import { CreateCategory, CreateLocation, CreateSkill, Skill } from '@/types';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Tipos para las respuestas de la API
@@ -180,7 +181,7 @@ export const jobsApi = {
   updateUser: (id: string, userData: any) => api.put(`/users/${id}`, userData),
   deleteUser: (id: string) => api.delete(`/users/${id}`),
   sendUserCV: (id: number, file: File, onProgress?: (progress: number) => void) => api.uploadFile(`/users/cv/upload`, file, id, onProgress),
-
+  sendUserAvatar: (id: number, file: File, onProgress?: (progress: number) => void) => api.uploadFile(`/users/avatar`, file, id, onProgress),
   // Enterprises
   getAllEnterprises: () => api.get('/enterprise'),
   getEnterpriseById: (id: string) => api.get(`/enterprise/${id}`),
@@ -189,16 +190,18 @@ export const jobsApi = {
 
   // Categories
   getAllCategories: () => api.get('/category'),
-  createCategory: (categoryData: any) => api.post('/category', categoryData),
+  createCategory: (categoryData: CreateCategory) => api.post('/category', categoryData),
 
   // Locations
   getAllLocations: () => api.get('/location'),
-  createLocation: (locationData: any) => api.post('/location', locationData),
+  createLocation: (locationData: CreateLocation) => api.post('/location', locationData),
 
   // Skills
   getAllSkills: () => api.get('/skills'),
-  createSkill: (skillData: any) => api.post('/skills', skillData),
-
+  getSkillsByUserId: (id: string) => api.get(`/skills/user/${id}`),
+  createSkill: (skillData: CreateSkill) => api.post('/skills', skillData),
+  deleteSkill: (id: string) => api.delete(`/skills/${id}`),
+  updateSkill: (id: string, skillData: CreateSkill) => api.put(`/skills/${id}`, skillData),
   // Languages
   getAllLanguages: () => api.get('/languages'),
   createLanguage: (languageData: any) => api.post('/languages', languageData),

@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
         if (data.length === 0) {
             return NextResponse.json(
-                { message: 'No se encontraron habilidades para este usuario' },
+                { message: 'No se encontraron habilidades para este usuario', success: false },
                 { status: 404 }
             );
         }
@@ -18,13 +18,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         return NextResponse.json({
             data,
             message: 'Habilidades obtenidas exitosamente',
-            status: 200
+            success: true
         });
 
     } catch (error) {
         console.error('Error getting skills by user ID:', error);
         return NextResponse.json(
-            { message: 'Error interno del servidor al obtener habilidades' },
+            { message: 'Error interno del servidor al obtener habilidades', success: false },
             { status: 500 }
         );
     }

@@ -234,11 +234,13 @@ export type EnterpriseForm = {
   typePlanId?: number;
 };
 
-// ================================
-// TIPOS DE RESPUESTA API
-// ================================
+export type CreateSkill =  Omit<Skill, 'id'>;
+export type CreateLocation = Omit<Location, 'id'>;
+export type CreateUser = Omit<User, 'id'>;
+export type CreateEnterprise = Omit<Enterprise, 'id'>;
+export type CreateExperience = Omit<Experience, 'id'>;
+export type CreateCategory = Omit<Category, 'id'>;
 
-// Respuesta estándar de API
 export type ApiResponse<T> = {
   success: boolean;
   data?: T;

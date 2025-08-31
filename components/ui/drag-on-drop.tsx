@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { Upload, X, FileText, CheckCircle, AlertCircle, CloudUpload, Trash, Eye } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 interface DragAndDropProps {
   onFileSelect: (file: File) => void
@@ -236,8 +237,8 @@ export default function DragAndDrop({
                 className="flex items-center  p-3 rounded-lg"
               >
                 <div className='flex-1 flex items-center gap-4'>
-                    <div className="min-h-13 aspect-square flex items-center justify-center rounded-md bg-primary/5 border border-primary/10">
-                        <FileText className="size-5 text-primary" />
+                    <div className="min-h-13 aspect-square flex relative overflow-hidden items-center justify-center rounded-md bg-primary/5 border border-primary/10">
+                       {acceptedTypes.includes('.pdf') ? <FileText className="size-5 text-primary" /> : <Image src={URL.createObjectURL(file)} alt={file.name} className='object-cover' fill />}
                     </div>
                     <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground text-ellipsis">

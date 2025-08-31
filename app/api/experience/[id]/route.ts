@@ -129,23 +129,20 @@ export async function PUT(
 // DELETE - Eliminar una experiencia por ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const experienceId = parseInt(params.id);
 
-    if (isNaN(experienceId)) {
-      return NextResponse.json(
-        { message: 'ID de experiencia inválido' },
-        { status: 400 }
-      );
-    }
+    const { id } = await params;
+
+    const experienceId = parseInt(id);
 
     // Verificar que la experiencia existe
     const existingExperience = await getExperienceById(experienceId);
+    
     if (!existingExperience || existingExperience.length === 0) {
       return NextResponse.json(
-        { message: 'Experiencia no encontrada' },
+        { message: 'Experiencia no encontrada' , success: false},
         { status: 404 }
       );
     }
@@ -154,20 +151,20 @@ export async function DELETE(
 
     if (!result.rowCount) {
       return NextResponse.json(
-        { message: 'No se pudo eliminar la experiencia' },
+        { message: 'No se pudo eliminar la experiencia', success: false },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
       message: 'Experiencia eliminada exitosamente',
-      status: 200
+      success: true
     });
 
   } catch (error) {
     console.error('Error deleting experience:', error);
     return NextResponse.json(
-      { message: 'Error interno del servidor al eliminar experiencia' },
+      { message: 'Error interno del servidor al eliminar experiencia', success: false },
       { status: 500 }
     );
   }

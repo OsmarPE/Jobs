@@ -1,5 +1,4 @@
 import { createSkillbyUserAction } from "@/actions/skills";
-import { jobsApi } from "@/app/services/api";
 import FormItem from "@/components/auth/FormItem";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +11,9 @@ import {
 import { Form } from "@/components/ui/form";
 import FormSubmit from "@/components/ui/form-submit";
 import { skillSchema } from "@/lib/validations/skill";
-import { Skill } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -23,14 +21,17 @@ import z from "zod";
 
 
 
-export default function ProfileSkillsEdit({ open }: { open: boolean }) {
+export default function ProfileSkillsAdd({ open }: { open: boolean }) {
 
     const router = useRouter()
     const search = useSearchParams()
-    const userId = search?.get('edit-skills')
-    const [skills, setSkills] = useState<Skill[]>([])
-    const [skillToEdit, setSkillToEdit] = useState<Skill | null>(null);
+    const userId = search?.get('add-skills')
 
+    const handleCancel = () => {
+        router.back()
+    }
+  
+  
     const form = useForm({
         resolver: zodResolver(skillSchema),
         defaultValues: {
@@ -38,31 +39,15 @@ export default function ProfileSkillsEdit({ open }: { open: boolean }) {
         },
     });
     
-    useEffect(() => {
-        console.log({userId});
-     if (userId) {
-        
-       jobsApi.getSkillsByUserId(userId)
-         .then((data) => {
-            
-           setSkills(data.data);
-         })
-         .catch((error) => {
-           console.error("Error fetching skills:", error);
-         });
-     }
-    }, [userId])
-
-    const handleCancel = () => {
-        setSkillToEdit(null);
-        form.reset();
-    }
-
 
     const onSubmit = async (data: z.infer<typeof skillSchema>) => { 
         console.log("Submitting skill data:", data);
-
-        const response = await jobsApi.updateSkill(skillToEdit?.id.toString()!, data);
+        
+        const response = await createSkillbyUserAction({
+            ...data,
+            userId: Number(userId),
+        }); 
+           
         const { success, message } = response;
 
         if (!success) {
@@ -70,56 +55,28 @@ export default function ProfileSkillsEdit({ open }: { open: boolean }) {
             return;
         }
 
-        setSkills((prev) => prev.map((skill) => skill.id === skillToEdit?.id ? { ...skill, ...data } : skill));
-        setSkillToEdit(null);
-        form.reset();
-        router.refresh();
-    }
-
-    const handleDeleteSkill = async (skillId: string) => {
-        const { success, message }  = await jobsApi.deleteSkill(skillId);
-
-        if (!success) {
-            toast.error(message);
-            return;
-        }
-
         toast.success(message);
-        setSkills((prev) => prev.filter((skill) => skill?.id !== +skillId));
-        router.refresh();
-    };
+        
+        router.back();
+
+        form.reset();
+
+    }
 
     useEffect(() => {
         form.reset();
     }, [open]);
-
-    const handleEditSkill = (skill: Skill) => {
-        setSkillToEdit(skill);
-        form.reset({
-            name: skill.name,
-        });
-    }
-
+ 
     return (
         <Dialog open={open} onOpenChange={() => router.back()}>
             <DialogContent className="bg-background-landing">
                 <DialogHeader>
-                    <DialogTitle>Editar habilidades</DialogTitle>
+                    <DialogTitle>Habilidades</DialogTitle>
                     <DialogDescription>
                         Añade, edita o elimina tus habilidades profesionales
                     </DialogDescription>
                 </DialogHeader>
-                 {!skillToEdit ? (<ul className="skills">
-                    {
-                        skills?.map((skill) => (
-                            <li className="skills__item badge cursor-pointer hover:bg-primary">
-                                <span onClick={() => handleEditSkill(skill)}>{skill?.name}</span>
-                                <button onClick={() => handleDeleteSkill(skill?.id.toString())}>delete</button>
-                            </li>
-                        ))
-                    }
-                </ul>) : (
-
+    
                   <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormItem
@@ -131,12 +88,10 @@ export default function ProfileSkillsEdit({ open }: { open: boolean }) {
                             
                             <div className="flex justify-end gap-4">
                                 <Button type="button" variant="secondaryLanding"  onClick={handleCancel}>Cancelar</Button>
-                                <FormSubmit loading={form.formState.isSubmitting}>Editar</FormSubmit>
+                                <FormSubmit loading={form.formState.isSubmitting}>Agregar</FormSubmit>
                             </div>
                         </form>
                     </Form>
-                ) }
-    
           
             </DialogContent>
         </Dialog>

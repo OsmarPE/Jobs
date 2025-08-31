@@ -1,5 +1,5 @@
 
-import { getEducationById, updateEducation } from '@/src/schemas/education';
+import { deleteEducation, getEducationById, updateEducation } from '@/src/schemas/education';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(  
@@ -41,5 +41,25 @@ export async function PUT(
   } catch (error) {
     console.error('Error updating education:', error);
     return NextResponse.json({ message: 'Error al actualizar la educación', success: false, data: null }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  if (!id) {
+    return NextResponse.json({ message: 'El ID de educación es requerido', success: false, data: null }, { status: 400 });
+  }
+  try {
+    const data = await deleteEducation(+id);
+    if (!data) {
+      return NextResponse.json({ message: 'Educación no encontrada', success: false, data: null }, { status: 404 });
+    }
+    return NextResponse.json({ message: 'Educación eliminada exitosamente', success: true, data: null }, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting education:', error);
+    return NextResponse.json({ message: 'Error al eliminar la educación', success: false, data: null }, { status: 500 });
   }
 }

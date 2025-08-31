@@ -10,7 +10,7 @@ import { Experience } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { jobsApi } from "@/app/services/api";
-import { EditIcon, Pencil } from "lucide-react";
+import { EditIcon, Pencil, Trash2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import { educationSchema, experienceSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,7 @@ export default function ProfileEducationEdit({ userId }: { userId: number }) {
     const [educationToEdit, setEducationToEdit] = useState<Education | null>(null);
     const [currentJob, setCurrentJob] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     const router = useRouter()
     useEffect(() => {
@@ -47,7 +48,7 @@ export default function ProfileEducationEdit({ userId }: { userId: number }) {
                     setLoading(false);
                 });
         }
-    }, [userId, educationToEdit])
+    }, [userId, educationToEdit,refresh])
 
 
     const form = useForm({
@@ -84,11 +85,21 @@ export default function ProfileEducationEdit({ userId }: { userId: number }) {
             toast.error(message)
             return
         }
-        console.log('Educación actualizada:', data);
         setEducationToEdit(null);
         toast.success(message)
         router.refresh()
+    }
+    
+    const handleDeleteUser = async (id: string) => {
+        const { success, message } = await jobsApi.deleteEducation(id)
 
+        if (!success) {
+            toast.error(message)
+            return
+        }
+        toast.success(message)
+        setRefresh(prev => !prev);
+        router.refresh()
     }
 
     return (
@@ -108,6 +119,9 @@ export default function ProfileEducationEdit({ userId }: { userId: number }) {
                             <div className="education__actions">
                                 <button className="cursor-pointer hover:text-white" onClick={() => handleSelectEducationForEdit(education)}>
                                     <Pencil width={14} className="transition" />
+                                </button>
+                                <button className="cursor-pointer hover:text-white" onClick={() => handleDeleteUser(education.id?.toString() ?? '')}>
+                                    <Trash2 width={14} className="transition" />
                                 </button>
                             </div>
                         </li>

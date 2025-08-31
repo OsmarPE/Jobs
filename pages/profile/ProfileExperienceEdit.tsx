@@ -10,7 +10,7 @@ import { Experience } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { jobsApi } from "@/app/services/api";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import { experienceSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,7 @@ export default function ProfileExperienceEdit({ userId }: { userId: number }) {
     const router = useRouter()
     useEffect(() => {
         if (!experienceToEdit){
+            
             jobsApi.getExperienceByUserId(userId.toString())
                 .then(data => {
                     console.log('Experiences fetched:', data);
@@ -89,6 +90,22 @@ export default function ProfileExperienceEdit({ userId }: { userId: number }) {
         
     }
 
+    const handleDeleteUser = async (id: string) => {
+        const { success, message } = await jobsApi.deleteExperience(id)
+        console.log(message);
+        
+        if (!success) {
+            toast.error(message)
+            return
+        }
+        
+        toast.success(message)
+        router.refresh()
+
+        const newExperiences = experiences.filter((exp) => exp.id !== +id);
+        setExperiences(newExperiences);
+    }
+
     return (
         <Dialog open onOpenChange={() => router.back()}>
             <DialogContent className="bg-background-landing">
@@ -101,9 +118,14 @@ export default function ProfileExperienceEdit({ userId }: { userId: number }) {
                             <div className="experience__body">
                                 <div className="experience__heading">
                                     <h3 className="experience__title">{experience?.area} </h3>
-                                    <button className="cursor-pointer hover:text-white" onClick={() => handleSelectExperienceForEdit(experience)}>
-                                        <Pencil width={14} className="transition" />
-                                    </button>
+                                    <div className="flex items-center gap-4">
+                                        <button className="cursor-pointer hover:text-white" onClick={() => handleSelectExperienceForEdit(experience)}>
+                                            <Pencil width={14} className="transition" />
+                                        </button>
+                                        <button className="cursor-pointer hover:text-white" onClick={() => handleDeleteUser(experience.id?.toString() ?? '')}>
+                                            <Trash2 width={14} className="transition" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="experience__info">
                                     <span className="experience__text">{experience?.areaJob}</span>

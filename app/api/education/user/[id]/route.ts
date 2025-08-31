@@ -3,8 +3,8 @@ import { getEducationsByUserId } from '@/src/schemas/education'
 import { NextRequest, NextResponse } from 'next/server';
 
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   if (!id) {
     return NextResponse.json({ message: 'User ID is required', status: false, data: null }, { status: 400 });
   }

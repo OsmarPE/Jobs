@@ -55,7 +55,7 @@ export async function PUT(
 
     if (isNaN(skillId)) {
       return NextResponse.json(
-        { message: 'ID de skill inválido' },
+        { message: 'ID de skill inválido', success: false },
         { status: 400 }
       );
     }
@@ -64,7 +64,7 @@ export async function PUT(
 
     if (data.name !== undefined && (!data.name || data.name.trim() === '')) {
       return NextResponse.json(
-        { message: 'El nombre de la skill no puede estar vacío' },
+        { message: 'El nombre de la skill no puede estar vacío', success: false },
         { status: 400 }
       );
     }
@@ -72,7 +72,7 @@ export async function PUT(
     const existingSkill = await getSkillss(skillId);
     if (!existingSkill) {
       return NextResponse.json(
-        { message: 'Skill no encontrada' },
+        { message: 'Skill no encontrada', success: false },
         { status: 404 }
       );
     }
@@ -81,20 +81,20 @@ export async function PUT(
 
     if (!result.rowCount) {
       return NextResponse.json(
-        { message: 'No se pudo actualizar la skill' },
+        { message: 'No se pudo actualizar la skill', success: false },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
       message: 'Skill actualizada exitosamente',
-      status: 200
+      success: true
     });
 
   } catch (error) {
     console.error('Error updating skill:', error);
     return NextResponse.json(
-      { message: 'Error interno del servidor al actualizar skill' },
+      { message: 'Error interno del servidor al actualizar skill', success: false },
       { status: 500 }
     );
   }
@@ -110,7 +110,7 @@ export async function DELETE(
 
     if (isNaN(skillId)) {
       return NextResponse.json(
-        { message: 'ID de skill inválido' },
+        { message: 'ID de skill inválido', success:false },
         { status: 400 }
       );
     }
@@ -119,7 +119,7 @@ export async function DELETE(
     const existingSkill = await getSkillss(skillId);
     if (!existingSkill) {
       return NextResponse.json(
-        { message: 'Skill no encontrada' },
+        { message: 'Skill no encontrada', success:false },
         { status: 404 }
       );
     }
@@ -128,20 +128,20 @@ export async function DELETE(
 
     if (!result.rowCount) {
       return NextResponse.json(
-        { message: 'No se pudo eliminar la skill' },
+        { message: 'No se pudo eliminar la skill', success:false },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
       message: 'Skill eliminada exitosamente',
-      status: 200
+      success: true
     });
 
   } catch (error) {
     console.error('Error deleting skill:', error);
     return NextResponse.json(
-      { message: 'Error interno del servidor al eliminar skill' },
+      { message: 'Error interno del servidor al eliminar skill', success:false },
       { status: 500 }
     );
   }

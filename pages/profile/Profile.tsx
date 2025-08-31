@@ -10,10 +10,12 @@ import ProfileSkillsActions from "./ProfileSkillsActions";
 import ProfileLanguagesActions from "./ProfileLanguagesActions";
 import ProfileUserAction from "./ProfileUserAction";
 import ProfileCVAction from "./ProfileCVAction";
+import ProfileEditAvatar from "./ProfileEditAvatar";
+import Image from "next/image";
 
 export default function Profile({user}: { user: UserWithRelations }) {
 
-    const { id, name, email, phone, cv, experiences , educations} = user;
+    const { id, name, email, phone, cv, experiences , educations, avatar} = user;
 
 
   return (
@@ -21,8 +23,12 @@ export default function Profile({user}: { user: UserWithRelations }) {
         <div className="circle circle-left-header"></div>
          <BreadcrumbLinks className='mb-6' links={[{ label: 'Inicio', href: '/' }, { label: 'Perfil', href: '/profile' }]} />
                        
-        <div className="profile__icon">
-            <UserRound />
+        <div className={avatar ? 'profile__icon has-avatar' : 'profile__icon'}>
+            <div className="profile__icon-body">
+                <UserRound />
+                {avatar && <Image src={`/uploads/${avatar}`} className="rounded-full" alt={name} fill />}
+               <ProfileEditAvatar userId={id} />
+            </div>
         </div>
 
         <div className="profile__heading">
