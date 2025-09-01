@@ -36,7 +36,7 @@ export const getEnterprise = async (id: Enterprise['id']) => {
   }
 }
 
-export const createEnterprise = async ({ name, email, phone, locationId, description, logo, pageWeb }: NewEnterprise) => {
+export const createEnterprise = async ({ name, email, phone, location, description, logo, pageWeb }: NewEnterprise) => {
   try {
     const data = await db
       .insert(enterprise)
@@ -44,10 +44,10 @@ export const createEnterprise = async ({ name, email, phone, locationId, descrip
         name,
         email,
         phone,
-        locationId,
+        location,
         description,
         logo,
-        pageWeb
+        pageWeb,
       })
      
     return data;
@@ -56,7 +56,7 @@ export const createEnterprise = async ({ name, email, phone, locationId, descrip
   }
 }
 
-export const updateEnterprise = async (id: number, { name, email, phone, locationId, description, logo, pageWeb }: UpdateEnterprise) => {
+export const updateEnterprise = async (id: number, { name, email, phone, location, description, logo, pageWeb }: UpdateEnterprise) => {
   try {
     const data = await db
       .update(enterprise)
@@ -64,7 +64,7 @@ export const updateEnterprise = async (id: number, { name, email, phone, locatio
         name,
         email,
         phone,
-        locationId,
+        location,
         description,
         logo,
         pageWeb

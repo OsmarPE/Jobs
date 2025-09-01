@@ -3,11 +3,10 @@ import { useJobCurrent } from "@/hooks/use-job-current";
 import LinkendIn from "@/img/linkedin.png";
 import { Bookmark, Box, Building2, Calendar, CircleAlert, Clock12, CreditCard, Link, MapPin, Type, UsersRound, X } from "lucide-react";
 import { motion, Variants } from "motion/react"
-import { Button } from "../ui/button";
-import LinkNext from "next/link";
 import { useEffect } from "react";
 import { formarPrice, timeAgoInWords } from "@/lib/utils";
 import Circle from "../landing/Circle";
+import JobDetailsButton from "./JobDetailsButton";
 
 export default function JobDetailsModal() {
 
@@ -45,7 +44,6 @@ export default function JobDetailsModal() {
             document.body.classList.remove('hidden-scroll');
         }
 
-        // Cleanup: remover la clase cuando el componente se desmonte
         return () => {
             document.body.classList.remove('hidden-scroll');
         };
@@ -112,11 +110,7 @@ export default function JobDetailsModal() {
                     </ul>
 
                     <div className="details__actions">
-                        <Button asChild>
-                            <LinkNext href={`/apply-job/${id}`}>
-                                Postularse ahora
-                            </LinkNext>
-                        </Button>
+                        <JobDetailsButton id={ id?.toString() ?? ''} />
                         <div className="details__line"></div>
                         <div className="details__socials">
                             <button className="details__socials-btn">

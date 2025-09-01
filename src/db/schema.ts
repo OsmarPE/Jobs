@@ -159,11 +159,15 @@ export const turnJob = pgTable('turn_job', {
 // Tablas intermedias para Job (N:N)
 export const jobSkills = pgTable('job_skills', {
   jobId: integer('job_id').references(() => job.id, { onDelete: 'cascade' }).notNull(),
-  skillId: integer('skill_id').references(() => skills.id, { onDelete: 'cascade' }).notNull()
-}, (table) => ({
+  skillId: integer('skill_job_id').references(() => skillsJobs.id, { onDelete: 'cascade' }).notNull()
+}, (table) => [{
   pk: primaryKey({ columns: [table.jobId, table.skillId] })
-}));
+}]);
 
+export const skillsJobs = pgTable('skills_jobs', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 100 }).notNull().unique(),
+});
 
 export const jobLanguages = pgTable('job_languages', {
   jobId: integer('job_id').references(() => job.id, { onDelete: 'cascade' }).notNull(),
@@ -203,6 +207,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   followUps: many(followUp),
   skills: many(skills),
   educations: many(education),
+  bookmarks: many(bookmark),
 }));
 
 
@@ -242,7 +247,9 @@ export const enterpriseRelations = relations(enterprise, ({ one, many }) => ({
   jobs: many(job),
   interviews: many(interview),
   typePlan: one(typePlan),
+  
 }));
+
 
 // Relaciones para Job
 export const jobRelations = relations(job, ({ one, many }) => ({
@@ -272,7 +279,8 @@ export const jobRelations = relations(job, ({ one, many }) => ({
   turnJobs: one(turnJob, {
     fields: [job.turnJobId],
     references: [turnJob.id]
-  })
+  }),
+  usersBookmarks: many(bookmark),
 }));
 
 
@@ -289,8 +297,16 @@ export const languagesRelations = relations(languages, ({ many }) => ({
   userLanguages: many(userLanguages),
 }));
 
+
+export const bookmark = pgTable('bookmark', {
+  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  jobId: integer('job_id').references(() => job.id, { onDelete: 'cascade' }).notNull()
+}, (table) => ({
+  pk: primaryKey({ columns: [table.userId, table.jobId] })
+}));
+
 // Relaciones para Skills
-export const skillsRelations = relations(skills, ({ many }) => ({
+export const skillsRelations = relations(skillsJobs, ({ many }) => ({
   jobSkills: many(jobSkills)
 }));
 
@@ -306,14 +322,25 @@ export const userLanguagesRelations = relations(userLanguages, ({ one }) => ({
   })
 }));
 
+export const bookmarkRelations = relations(bookmark, ({ one }) => ({
+  user: one(users, {
+    fields: [bookmark.userId],
+    references: [users.id]
+  }),
+  job: one(job, {
+    fields: [bookmark.jobId],
+    references: [job.id]
+  })
+}));
+
 export const jobSkillsRelations = relations(jobSkills, ({ one }) => ({
   job: one(job, {
     fields: [jobSkills.jobId],
     references: [job.id]
   }),
-  skill: one(skills, {
+  skill: one(skillsJobs, {
     fields: [jobSkills.skillId],
-    references: [skills.id]
+    references: [skillsJobs.id]
   })
 }));
 

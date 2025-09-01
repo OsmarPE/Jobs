@@ -1,12 +1,16 @@
 'use client';
+import { jobsApi } from "@/app/services/api";
 import ApplyJobSuccess from "@/components/apply-job/ApplyJobSuccess";
 import Circle from "@/components/landing/Circle";
 import FormSubmit from "@/components/ui/form-submit";
+import { Job } from "@/src/schemas/job";
 import { User } from "@/src/schemas/user";
+import { JobType } from "@/types";
 import { useState } from "react";
+import { toast } from "sonner";
 
 
-export default function AppyJob({ user }: { user: User }) {
+export default function AppyJob({ user, jobId, job }: { user: User, jobId: string, job: JobType}) {
 
     const [sendCV, setsendCV] = useState(false)
     const [loading, setloading] = useState(false)
@@ -16,25 +20,29 @@ export default function AppyJob({ user }: { user: User }) {
 
         try {
             setloading(true)
-            //   await fetch('/api/users/cv', {
-            //     method: 'POST',
-            //     headers: {
-            //       'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //       cv
-            //     })
-            //   })
+            const { message, success } = await jobsApi.createFollowUp({
+                jobId: +jobId,
+                userId: user.id,
+                status: 'pending'
+            })
+
+            if (!success) {
+                toast.error(message);
+                return;
+            }
+
+            toast.success(message);
             setsendCV(true)
+            
         } catch (error) {
-            console.log(error)
+            toast.error("Error al enviar la solicitud");
         } finally {
             setloading(false)
         }
 
     }
 
-    if (sendCV) return <ApplyJobSuccess />
+    if (sendCV) return <ApplyJobSuccess job={job} />;
 
     return (
 
@@ -42,7 +50,7 @@ export default function AppyJob({ user }: { user: User }) {
             <div className="step__bar">
                 <div className="step__progress" style={{ width: '60%' }}></div>
             </div>
-            <h2 className="step__title">Solicitar empleo en Justia</h2>
+            <h2 className="step__title">Solicitar empleo en {job?.title}</h2>
             <p className="step__text">El empleador también recibirá los datos de tu perfil y CV .</p>
 
             <h3 className="step__subtitle">Información de contacto</h3>

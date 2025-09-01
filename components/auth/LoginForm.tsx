@@ -9,6 +9,7 @@ import FormItem from "./FormItem";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import FormSubmit from "../ui/form-submit";
+import { jobsApi } from "@/app/services/api";
 
 const user = z.object({
   email: z.string().email({ message: "Ingresa tu correo electronico" }),

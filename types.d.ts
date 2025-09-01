@@ -102,7 +102,8 @@ export type JobType = {
     turnJobs?: TurnJob;
     jobSkills?: JobSkill[];
     jobLanguages?: JobLanguage[];
-    followUps: FollowUp[];
+    followUps?: FollowUp[];
+    usersBookmarks?: Bookmark[];
     createdAt: Date;
 }
 
@@ -156,6 +157,11 @@ interface FollowUp{
     jobId: number;
     status: string;
 }
+interface Bookmark{
+    id: number;
+    userId: number | null;
+    jobId: number;
+}
 
 interface JobSkill{
     id: number;
@@ -163,6 +169,7 @@ interface JobSkill{
     jobId: number;
     skill?: Skill;
 }
+
 
 interface Enterprise{
     name: string;

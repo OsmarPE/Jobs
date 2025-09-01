@@ -981,6 +981,10 @@ ul {
     place-items: center;
 }
 
+.job__actions-btn.active svg{
+    fill: var(--color-text);
+}
+
 :is(.job__actions-btn, .details__socials-btn):hover {
     color: var(--color-white-100);
 }
@@ -1130,6 +1134,11 @@ ul {
     font-size: .875rem;
 }
 
+.step__text--message{
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
 .step__submit,
 .step__btn {
     width: 100%;
@@ -1200,6 +1209,13 @@ ul {
     background-color: var(--color-coffee-100);
     padding: 3rem;
     overflow-y: auto;
+}
+
+.details__job{
+    padding: 3rem;
+    max-width: 780px;
+    position: static;
+    margin: 0 auto;
 }
 
 ::-webkit-scrollbar {

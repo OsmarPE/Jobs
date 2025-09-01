@@ -13,10 +13,6 @@ export default function ButtonJob({job}: Props) {
     const { setJobCurrent } = useJobCurrent();
 
     const handleShowJobCurrent = () => {
-        const token = getCookie('token');
-        if (!token){
-            return redirect('?auth=true'); 
-        }
         setJobCurrent(job);
     }
 

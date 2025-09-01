@@ -20,13 +20,15 @@ interface JobFilters {
   salaryMax?: number;
   limit?: number;
   offset?: number;
+  page?: number;
 }
 
 
-export const  getJobs = async ( filters: JobFilters = {limit: 10} ): Promise<Job[]> => {
+export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): Promise<Job[]> => {
 
-  
-    const { typeJob, location } = filters
+  const { typeJob, location, limit, page } = filters  
+  const offset = (limit && page) ? limit * (page - 1) : 0;
+
     let where: any[] = []
     
     if (where){
@@ -46,6 +48,7 @@ export const  getJobs = async ( filters: JobFilters = {limit: 10} ): Promise<Job
             schedule: true,
             timeJob: true,
             typeJob: true,
+            usersBookmarks:true,
             jobSkills: {
               with:{
                 skill: {
@@ -68,6 +71,7 @@ export const  getJobs = async ( filters: JobFilters = {limit: 10} ): Promise<Job
             
           },
           limit: filters.limit,
+          offset: filters.offset
         });
       
         
@@ -76,7 +80,6 @@ export const  getJobs = async ( filters: JobFilters = {limit: 10} ): Promise<Job
     } catch (error) {
       throw new Error(`Error fetching jobs: ${error}`);
     }
-
 }
 
 export const getJob = async (id: Job['id']) => {
@@ -85,7 +88,33 @@ export const getJob = async (id: Job['id']) => {
       .query
       .job
       .findFirst({
-        where: eq(job.id, id)
+        where: eq(job.id, id),
+        with: {
+          location: true,
+          enterprise: true,
+          schedule: true,
+          timeJob: true,
+          typeJob: true,
+          jobSkills: {
+            with: {
+              skill: {
+                columns: {
+                  name: true
+                }
+              }
+            }
+          },
+          turnJobs: true,
+          jobLanguages: {
+            with: {
+              language: {
+                columns: {
+                  name: true
+                }
+              }
+            }
+          },
+        }
       })
     
     return data;

@@ -12,12 +12,13 @@ import { Button } from "../ui/button";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useURLParams } from "@/hooks/use-params-url";
 export default function JobAuthWarning() {
     
-    const router = useRouter();
+    const params = useURLParams()
 
     return (
-        <Dialog open onOpenChange={() => router.push('?auth=false')}>
+        <Dialog open onOpenChange={() => params.updateParams({ auth: '' })}>
             <DialogContent className="bg-background-landing">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">

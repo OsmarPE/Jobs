@@ -1,4 +1,6 @@
+import { NewBookmark } from '@/src/schemas/bookmark';
 import { Experience } from '@/src/schemas/experience';
+import { NewFollowUp } from '@/src/schemas/followUp';
 import { User } from '@/src/schemas/user';
 import { CreateCategory, CreateLocation, CreateSkill, Skill } from '@/types';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -225,7 +227,7 @@ export const jobsApi = {
 
   // Follow Up
   getAllFollowUps: () => api.get('/followUp'),
-  createFollowUp: (followUpData: any) => api.post('/followUp', followUpData),
+  createFollowUp: (followUpData: NewFollowUp) => api.post('/followUp', followUpData),
   updateFollowUp: (id: string, followUpData: any) => api.put(`/followUp/${id}`, followUpData),
 
   getEducations: () => api.get('/education'),
@@ -235,6 +237,8 @@ export const jobsApi = {
   updateEducation: (id: string, educationData: any) => api.put(`/education/${id}`, educationData),
   deleteEducation: (id: string) => api.delete(`/education/${id}`),
 
+  createBookmark: (data: NewBookmark) => api.post('/bookmark', data),
+  deleteBookmark: (jobId: string) => api.delete(`/bookmark/${jobId}`),
 
 };
 

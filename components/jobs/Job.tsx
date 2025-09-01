@@ -7,18 +7,23 @@ import { type JobType } from "@/types";
 import { formarPrice, timeAgoInWords } from "@/lib/utils";
 
 
-type Props = JobType
+type Props = JobType & {
+    user: {
+        id: number;
+        name: string;
+    };
+};
 
 
 export default function Job(props: Props) {
-  
-    const { enterprise, title, location, schedule, timeJob, typeJob, salaryMin, createdAt, id } = props;
+
+    const { enterprise, title, location, schedule, timeJob, typeJob, salaryMin, usersBookmarks, createdAt, id, user } = props;
   
     const timeAgo = new Date(createdAt) 
     const now = new Date();
     const timeAgoInHours = Math.floor((now.getTime() - timeAgo.getTime()) / (1000 * 60 * 60));
 
-    
+
   return (
      <article className="job">
                 <div className="job__top">
@@ -54,7 +59,7 @@ export default function Job(props: Props) {
                                 </div>
                             </div>
                         </div>
-                        <JobAction id={id} />
+                        <JobAction id={id} user={user} usersBookmarks={usersBookmarks ?? []} />
                     </div>
                 </div>
                 <div className="job__bottom">

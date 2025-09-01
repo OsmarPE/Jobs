@@ -27,12 +27,30 @@ export const getUserById = async (id: User['id']) => {
     try {
         
         const data = await db
-            .select()
-            .from(users)
-            .where(eq(users.id, id))
-            .limit(1);
+            .query
+            .users
+            .findFirst({
+                where: eq(users.id, id),
+                with:{
+                    followUps: true,
+                    bookmarks:{
+                        with:{
+                            job:{
+                                columns:{
+                                    id: true,
+                                    title: true 
+                                },
+                                with:{
+                                    enterprise: true,
+                                }
+                            }
+                        }
+                    }
+                },
+            })
+            
 
-        return data.length ? data[0] : null;
+        return data
 
     } catch (error) {
         throw new Error(`Error fetching user: ${error}`);
@@ -96,12 +114,16 @@ export const updateUser = async (id: number, {...datas}:UpdateUser) => {
 export const getUserByEmail = async (email: string) => {
     try {
         const data = await db
-            .select()
-            .from(users)
-            .where(eq(users.email, email))
-            .limit(1);
+            .query
+            .users
+            .findFirst({
+                where: eq(users.email, email),
+                with: {
+                    followUps: true
+                }
+            });
 
-        return data ? data[0] : null;
+        return data;
 
     } catch (error) {
         throw new Error(`Error fetching user by email: ${error}`);

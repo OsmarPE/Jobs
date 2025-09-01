@@ -30,12 +30,13 @@ export async function POST(request: NextRequest) {
         }
 
         
-        const token = jwt.sign({ email, id:user.id, name: user.name }, process.env.SECRET_KEY!, { expiresIn: '27d' });
+        const token = jwt.sign({ email, id:user.id, name: user.name, avatar: user.avatar }, process.env.SECRET_KEY!, { expiresIn: '27d' });
         
         const cookie = await cookies();
-
+        console.log(user.followUps);
+        
         cookie.set('token', token);
-
+        cookie.set('followUp', JSON.stringify(user.followUps));
 
         return NextResponse.json({ message: "Ha iniciado sesión correctamente", data: { token }, status: 200 });
     } catch (error) {

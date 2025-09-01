@@ -3,10 +3,11 @@ import { Button } from "../ui/button";
 import Navegation from "../landing/Navegation";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import HeaderProfile from "../landing/HeaderProfile";
+import { getUserByToken } from "@/lib/auth";
 
-export default function Header() {
+export default async function Header() {
 
-    const auth = true
+    const user = await getUserByToken();
 
     return (
         <header className="header">
@@ -19,7 +20,7 @@ export default function Header() {
                         <Navegation />
                     </div>
 
-                    <HeaderProfile />
+                    <HeaderProfile user={user} />
 
                 </div>
             </div>

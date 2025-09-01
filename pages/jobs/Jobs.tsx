@@ -2,6 +2,7 @@
 import Job from "@/components/jobs/Job";
 import JobAuthWarning from "@/components/jobs/JobAuthWarning";
 import { JobPagination } from "@/components/jobs/JobPagination";
+import { getUserByToken } from "@/lib/auth";
 import { getJobs } from "@/src/schemas/job";
 import { JobType  } from "@/types";
 
@@ -9,8 +10,8 @@ export default async function Jobs({ auth, typeJob,location}: { auth?: string, l
     
     const data = await getJobs({typeJob,location})
     const jobs = data as unknown as JobType[]
-    
-    
+    const user = await getUserByToken();
+
     return (
         <section className="jobs__results">
 
@@ -33,8 +34,10 @@ export default async function Jobs({ auth, typeJob,location}: { auth?: string, l
                         turnJobs={job.turnJobs}
                         noVacancies={job.noVacancies}
                         direction={job.direction}
+                        usersBookmarks={job.usersBookmarks}
                         id={job.id}
                         createdAt={job.createdAt}
+                        user={user}
                     />
                 )
                 )

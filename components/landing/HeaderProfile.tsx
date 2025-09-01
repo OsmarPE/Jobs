@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Avatar, AvatarFallback } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import {
@@ -15,7 +15,7 @@ import { Bookmark, LogOut, UserRound } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getCookie } from '@/lib/utils'
 import logoutAction from '@/actions/logout'
-export default function HeaderProfile() {
+export default function HeaderProfile({ user }: { user: { id: string, name: string, avatar: string } | null }) {
 
 
     const [auth, setAuth] = useState(false)
@@ -35,13 +35,13 @@ export default function HeaderProfile() {
         setAuth(false)
     }
 
-    
     if (auth) {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <Avatar>
                         <AvatarFallback>OS</AvatarFallback>
+                        {user?.avatar && <AvatarImage src={`/uploads/${user.avatar}`} alt={user.name} />}
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
