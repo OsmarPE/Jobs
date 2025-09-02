@@ -102,3 +102,6 @@ export const getDateProfile = (date: string | null) => {
   return  newDate
 
 }
+
+
+export const getLinkDetailsJob = (id: string) => `${process.env.NEXT_PUBLIC_BASE_URL}/jobs/${id}`;

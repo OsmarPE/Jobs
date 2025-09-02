@@ -1,11 +1,13 @@
 import LinkedIn from "@/img/linkedin.png";
-import { Bookmark, Building2, Mail, MapPin, Pencil, Phone, UserRound } from "lucide-react";
+import { Bookmark, Building2, Mail, MapPin, Pencil, Phone, Trash, UserRound, XIcon } from "lucide-react";
 import BreadcrumbLinks from "../../components/layout/BreadcrumbLinks";
 import { Button } from "@/components/ui/button";
 import Circle from "@/components/landing/Circle";
 import { getUserByToken } from "@/lib/auth";
 import { getUserById } from "@/src/schemas/user";
 import { JobType } from "@/types";
+import Link from "next/link";
+import MyJobsActions from "@/components/my-jobs/MyJobsActions";
 
 export default async function MyJobs() {
 
@@ -46,10 +48,12 @@ export default async function MyJobs() {
             {
                 jobs.map(job => (
                     <li className="my-job" key={job.id}>
-                        <div className="my-job__body">
+                        <div className="my-job__top">
+
                             <div className="my-job__icon">
                                 <Building2 />
                             </div>
+                        <div className="my-job__body">
                             <div className="my-job__info">
                                 <span className="my-job__enterprise">{job?.enterprise.name}</span>
                                 <h3 className="my-job__title">{job?.title}</h3>
@@ -58,13 +62,15 @@ export default async function MyJobs() {
                                     <span>{'Ubicación no disponible'}</span>
                                 </span>
                             </div>
+                            <MyJobsActions id={job.id} />
                         </div>
-                        <Button className="my-job__button">
-                            Postularme
+                        </div>
+                        <Button className="my-job__button" asChild>
+                            <Link href={`/apply-job/${job.id}`}>
+                                Postularme
+                            </Link>
                         </Button>
-                        <button className="my-job__favorite">
-                            <Bookmark />
-                        </button>
+                        
                     </li>
                 ))
             }

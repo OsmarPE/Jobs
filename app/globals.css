@@ -1827,10 +1827,21 @@ body.hidden-scroll::-webkit-scrollbar {
     background-color: rgba(32, 22, 21, 0.3);
     color: var(--color-text);
     position: relative;
+    display: grid;
+    gap: 1rem;
+}
+
+.my-job__top{
+    display: flex;
+    gap: 1.25rem;
+    width: 100%;
 }
 
 .my-job__body {
+    flex: 1;
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     gap: 1.5rem;
 }
 
@@ -1843,6 +1854,33 @@ body.hidden-scroll::-webkit-scrollbar {
     justify-content: center;
     background-color: #201615;
     color: var(--color-primary);
+}
+
+.my-job__actions{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.my-job__remove{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: rgba(255, 255, 255, 0.75);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.my-job__remove:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+
 }
 
 .my-job__enterprise {
@@ -1865,9 +1903,8 @@ body.hidden-scroll::-webkit-scrollbar {
 }
 
 .my-job__favorite {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
+    /* position: absolute; */
+
 }
 
 .my-job__button {

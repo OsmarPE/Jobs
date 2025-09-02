@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { formarPrice, timeAgoInWords } from "@/lib/utils";
 import Circle from "../landing/Circle";
 import JobDetailsButton from "./JobDetailsButton";
+import JobDetailsSocials from "./JobDetailsSocials";
 
 export default function JobDetailsModal() {
 
@@ -112,14 +113,7 @@ export default function JobDetailsModal() {
                     <div className="details__actions">
                         <JobDetailsButton id={ id?.toString() ?? ''} />
                         <div className="details__line"></div>
-                        <div className="details__socials">
-                            <button className="details__socials-btn">
-                                <Bookmark />
-                            </button>
-                            <button className="details__socials-btn">
-                                <Link />
-                            </button>
-                        </div>
+                        <JobDetailsSocials id={id?.toString() ?? ''} />
                     </div>
                 </section>
                 <section className="details__information">
