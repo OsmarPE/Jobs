@@ -29,14 +29,38 @@ export const users = pgTable('users', {
   code: varchar('code', { length: 10 }),
   finishedRegistration: boolean('finished_registration').default(false),
 });
-// Tabla Location
-export const location = pgTable('location', {
+// Tabla Countries
+export const countries = pgTable('countries', {
   id: serial('id').primaryKey(),
-  city: varchar('city', { length: 100 }).notNull(),
-  country: varchar('country', { length: 100 }).notNull(),
-  code: varchar('code', { length: 10 })
+  name: varchar('name', { length: 100 }).notNull(),
+  isoCode: varchar('iso_code', { length: 3 }).notNull().unique() // MX, US, etc.
 });
 
+// Tabla States
+export const states = pgTable('states', {
+  id: serial('id').primaryKey(),
+  countryId: integer('country_id').references(() => countries.id, { onDelete: 'cascade' }).notNull(),
+  name: varchar('name', { length: 100 }).notNull(),
+  code: varchar('code', { length: 10 }) // YUC, CDMX, etc.
+});
+
+// Tabla Cities
+export const cities = pgTable('cities', {
+  id: serial('id').primaryKey(),
+  stateId: integer('state_id').references(() => states.id, { onDelete: 'cascade' }).notNull(),
+  name: varchar('name', { length: 100 }).notNull(),
+  latitude: decimal('latitude', { precision: 10, scale: 8 }),
+  longitude: decimal('longitude', { precision: 11, scale: 8 })
+});
+
+// Tabla Location (actualizada para usar las nuevas tablas)
+export const location = pgTable('location', {
+  id: serial('id').primaryKey(),
+  // cityId: integer('city_id').references(() => cities.id).notNull(),
+  city: varchar('city', { length: 100 }).notNull(), // Mantenemos por compatibilidad
+  country: varchar('country', { length: 100 }).notNull(), // Mantenemos por compatibilidad
+  code: varchar('code', { length: 10 })
+});
 
 // Tabla Languages
 export const languages = pgTable('languages', {
@@ -366,10 +390,37 @@ export const followUpRelations = relations(followUp, ({ one }) => ({
   })
 }));
 
-export const locationRelations = relations(location, ({ many }) => ({
+export const locationRelations = relations(location, ({ one, many }) => ({
+  // city: one(cities, {
+  //   fields: [location.cityId],
+  //   references: [cities.id]
+  // }),
   users: many(users),
   enterprises: many(enterprise),
   jobs: many(job)
+}));
+
+// Relaciones para Countries
+export const countriesRelations = relations(countries, ({ many }) => ({
+  states: many(states)
+}));
+
+// Relaciones para States
+export const statesRelations = relations(states, ({ one, many }) => ({
+  country: one(countries, {
+    fields: [states.countryId],
+    references: [countries.id]
+  }),
+  cities: many(cities)
+}));
+
+// Relaciones para Cities
+export const citiesRelations = relations(cities, ({ one, many }) => ({
+  state: one(states, {
+    fields: [cities.stateId],
+    references: [states.id]
+  }),
+  locations: many(location)
 }));
 
 export const typePlanRelations = relations(typePlan, ({ one }) => ({
