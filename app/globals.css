@@ -1821,7 +1821,7 @@ body.hidden-scroll::-webkit-scrollbar {
 }
 
 
-.my-job {
+.my-job, .applications {
     padding: 1.5rem;
     border-radius: 8px;
     background-color: rgba(32, 22, 21, 0.3);
@@ -1900,6 +1900,12 @@ body.hidden-scroll::-webkit-scrollbar {
     gap: .5rem;
     font-size: .875rem;
     color: var(--color-text);
+}
+
+.my-job__description{
+    font-size: .875rem;
+    color: var(--color-text);
+    margin-top: 0;
 }
 
 .my-job__favorite {

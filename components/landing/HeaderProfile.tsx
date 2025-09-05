@@ -32,6 +32,7 @@ export default function HeaderProfile({ user }: { user: { id: string, name: stri
    
     const logout = async () => {
         await fetch(`/api/users/logout`);
+        router.refresh();
         setAuth(false)
     }
 

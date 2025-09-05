@@ -81,3 +81,30 @@ export const deleteFollowUp = async (id: FollowUp['id']) => {
     throw new Error(`Error deleting followUp: ${error}`);
   }
 }
+
+export const getFollowUpsByUserId = async (userId: FollowUp['userId']): Promise<FollowUp[]> => {
+  try {
+    const data = await db
+      .query
+      .followUp
+      .findMany({
+        where: eq(followUp.userId, userId ?? 0),
+        with: {
+          job: {
+            columns:{
+              id: true,
+              title: true,
+              description: true,
+            },
+            with:{
+              enterprise:true
+            }
+          }
+        }
+      });
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error fetching followUps by userId: ${error}`);
+  }
+}

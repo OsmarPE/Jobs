@@ -1,6 +1,6 @@
 import { NewBookmark } from '@/src/schemas/bookmark';
 import { Experience } from '@/src/schemas/experience';
-import { NewFollowUp } from '@/src/schemas/followUp';
+import { getFollowUpsByUserId, NewFollowUp } from '@/src/schemas/followUp';
 import { User } from '@/src/schemas/user';
 import { CreateCategory, CreateLocation, CreateSkill, Skill } from '@/types';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -229,6 +229,7 @@ export const jobsApi = {
   getAllFollowUps: () => api.get('/followUp'),
   createFollowUp: (followUpData: NewFollowUp) => api.post('/followUp', followUpData),
   updateFollowUp: (id: string, followUpData: any) => api.put(`/followUp/${id}`, followUpData),
+  getFollowUpsByUserId: (userId: string) => api.get(`/followUp/user/${userId}`),
 
   getEducations: () => api.get('/education'),
   getEducationById: (id: string) => api.get(`/education/${id}`),

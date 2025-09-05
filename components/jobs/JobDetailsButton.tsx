@@ -22,8 +22,8 @@ export default function JobDetailsButton({ id }: { id: string }) {
     };
 
     const followUpCookie = getCookie('followUp');
+    
     const followUp = followUpCookie ? JSON.parse(decodeURIComponent(followUpCookie)) : [];
-
     const isPostulated = followUp?.some((item: { jobId: number }) => item.jobId === +id);
 
     if (isPostulated) {

@@ -8,6 +8,12 @@ import { getUserById } from "@/src/schemas/user";
 import { JobType } from "@/types";
 import Link from "next/link";
 import MyJobsActions from "@/components/my-jobs/MyJobsActions";
+import MyJobTabs from "../../components/my-jobs/MyJobTabs";
+import { MyJobProvider } from "@/context/MyJobContext";
+import MyJobList from "@/components/my-jobs/MyJobList";
+import MyJobsFavorites from "@/components/my-jobs/MyJobsFavorites";
+import MyJobApplications from "@/components/my-jobs/MyJobApplications";
+import MyJobInterview from "@/components/my-jobs/MyJobInterview";
 
 export default async function MyJobs() {
 
@@ -32,49 +38,13 @@ export default async function MyJobs() {
                 <p className="my-jobs__description">Mira los trabajos en las que haz postulado en los ultimos dias.</p>
             </div>
         </div>
-        <div className="my-jobs__tabs">
-            <button className="my-jobs__tab active">
-              Mis favoritos
-            </button>
-            <button className="my-jobs__tab">
-                Postulaciones
-            </button>
-            <button className="my-jobs__tab">
-                Entrevistas
-            </button>
-        </div>
 
-        <ul className="my-jobs__list">
-            {
-                jobs.map(job => (
-                    <li className="my-job" key={job.id}>
-                        <div className="my-job__top">
-
-                            <div className="my-job__icon">
-                                <Building2 />
-                            </div>
-                        <div className="my-job__body">
-                            <div className="my-job__info">
-                                <span className="my-job__enterprise">{job?.enterprise.name}</span>
-                                <h3 className="my-job__title">{job?.title}</h3>
-                                <span className="my-job__location">
-                                    <MapPin width={14} height={14} />
-                                    <span>{'Ubicación no disponible'}</span>
-                                </span>
-                            </div>
-                            <MyJobsActions id={job.id} />
-                        </div>
-                        </div>
-                        <Button className="my-job__button" asChild>
-                            <Link href={`/apply-job/${job.id}`}>
-                                Postularme
-                            </Link>
-                        </Button>
-                        
-                    </li>
-                ))
-            }
-        </ul>
+        
+        <MyJobProvider>
+            <MyJobList />
+            <MyJobTabs jobs={jobs} user={user} />
+        </MyJobProvider>
+        
 
     </div>
   )
