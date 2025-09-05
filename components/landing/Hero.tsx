@@ -4,6 +4,7 @@ import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { getCountries } from '@/src/schemas/countries'
 import LoadingForm from './LoadingForm'
+import { HeroFormSearchInput } from './HeroFormSearchInput'
 
 export default function Hero() {
     return (
@@ -37,7 +38,7 @@ export const HeroForm = async () => {
     return (
         <form className="hero__form">
             <div className="bg-input/30 flex items-center gap-2">
-                <Input style={{ background: 'transparent' }} placeholder="Buscar trabajo" id='name' name='name' className='border-none h-12 bg-transparent' />
+                <HeroFormSearchInput />
                 <div className="hero__separator"></div>
                 <Select>
                     <SelectTrigger className="h-12 w-[180px] border-none" style={{ background: 'transparent' }}>

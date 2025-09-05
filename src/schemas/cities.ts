@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, like, and } from 'drizzle-orm';
+import { eq, like, and, ilike } from 'drizzle-orm';
 import { cities } from '../db/schema';
 import { db } from '..';
 
@@ -145,7 +145,7 @@ export const getCitiesByStateId = async (stateId: number): Promise<City[]> => {
 // Buscar ciudades por nombre
 export const searchCities = async (searchTerm: string, stateId?: number): Promise<City[]> => {
   try {
-    const whereConditions = [like(cities.name, `%${searchTerm}%`)];
+    const whereConditions = [ilike(cities.name, `${searchTerm}%`)];
     
     if (stateId) {
       whereConditions.push(eq(cities.stateId, stateId));
@@ -164,7 +164,7 @@ export const searchCities = async (searchTerm: string, stateId?: number): Promis
           }
         },
         orderBy: (cities, { asc }) => [asc(cities.name)],
-        limit: 50 // Limitar resultados de búsqueda
+        limit: 10 // Limitar resultados de búsqueda
       });
     
     return data;
