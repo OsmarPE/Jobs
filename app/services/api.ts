@@ -176,6 +176,8 @@ export const jobsApi = {
   updateJob: (id: string, jobData: any) => api.put(`/job/${id}`, jobData),
   deleteJob: (id: string) => api.delete(`/job/${id}`),
   applyToJob: (jobId: string, applicationData: any) => api.post(`/job/${jobId}/apply`, applicationData),
+  getJobBySearch: (search: string) => api.get('/job', { params: { search } }),
+  getJobSalaryRange: () => api.get('/job/salary-range'),
 
   // Users
   getAllUsers: () => api.get('/users'),
@@ -241,6 +243,7 @@ export const jobsApi = {
   createBookmark: (data: NewBookmark) => api.post('/bookmark', data),
   deleteBookmark: (jobId: string) => api.delete(`/bookmark/${jobId}`),
 
+  getAllCountries: () => api.get('/countries'),
 };
 
 // Exportar la instancia principal para uso directo

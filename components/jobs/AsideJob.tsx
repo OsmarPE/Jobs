@@ -3,6 +3,7 @@ import { Briefcase, CreditCard, Map } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
 import { useURLParams } from '@/hooks/use-params-url'
+import PriceRangeSlider from './JobRangePrince'
 
 export default function AsideJob() {
     const [selectedJobType, setSelectedJobType] = useState<number | null>(null)
@@ -19,6 +20,10 @@ export default function AsideJob() {
     const handleChangeLocation = (value: number | null) => {
         setSelectedJobLocation(value)
         updateParams({ location: value?.toString() ?? '' })
+    }
+
+    const handleChangeRange = (min: number, max: number) => {
+        updateParams({ minPrice: min.toString(), maxPrice: max.toString() })
     }
 
     useEffect(() => {
@@ -83,10 +88,8 @@ export default function AsideJob() {
                     Rango Salarial
                 </h2>
                 <div className="jobs__range"></div>
-                <div className="price-labels">
-                    <span className="price-label" id="min-price">$1,000</span>
-                    <span className="price-label" id="max-price">$20,000</span>
-                </div>
+
+                <PriceRangeSlider handleChangeRange={handleChangeRange} />
             </div>
 
         </aside>

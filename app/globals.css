@@ -113,7 +113,6 @@
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
 
-
 }
 
 @media (prefers-color-scheme: dark) {
@@ -498,7 +497,6 @@ ul {
     right: 4rem;
 }
 
-
 .sponsors {
     width: 90vw;
     margin: 0 auto;
@@ -524,7 +522,6 @@ ul {
     height: auto;
 }
 
-
 @keyframes slide-infinite {
     0% {
         transform: translateX(0);
@@ -534,7 +531,6 @@ ul {
         transform: translateX(-1400px);
     }
 }
-
 
 .service {
     padding: 1.5rem;
@@ -1469,7 +1465,6 @@ body.hidden-scroll::-webkit-scrollbar {
     font-weight: 400;
 }
 
-
 .profile__description {
     font-size: 1rem;
     color: var(--color-text);
@@ -1499,7 +1494,6 @@ body.hidden-scroll::-webkit-scrollbar {
     color: var(--color-secondary);
     font-weight: 500;
 }
-
 
 .profile__list__information {
     display: grid;
@@ -1624,7 +1618,6 @@ body.hidden-scroll::-webkit-scrollbar {
 .profile__edit:hover {
     color: var(--color-primary);
 }
-
 
 .curriculum {
     display: flex;
@@ -1820,7 +1813,6 @@ body.hidden-scroll::-webkit-scrollbar {
     margin-top: 2rem;
 }
 
-
 .my-job, .applications {
     padding: 1.5rem;
     border-radius: 8px;
@@ -1919,7 +1911,6 @@ body.hidden-scroll::-webkit-scrollbar {
     margin-left: auto;
 }
 
-
 .code {
     width: 100%;
     max-width: 570px;
@@ -1930,7 +1921,6 @@ body.hidden-scroll::-webkit-scrollbar {
     position: relative;
     overflow: hidden;
 }
-
 
 .slider-container {
     width: 100%;
@@ -2006,8 +1996,6 @@ body.hidden-scroll::-webkit-scrollbar {
             rgba(22, 13, 14, 0.8) 50%,
             transparent 100%);
 }
-
-
 
 @keyframes slideInfinite {
     from {

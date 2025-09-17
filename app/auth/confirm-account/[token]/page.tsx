@@ -23,12 +23,7 @@ export default async function page({
 
   return (
     <div className="code">
-        <h1 className="font-semibold text-2xl text-secundary-landing">Activar cuenta</h1>
-        <p className="text-gray-200 text-sm">Ingrese el <span className="text-secundary-landing">código</span> que recibiste 
-        en tu correo para poder activar tu cuenta</p>  
-        <div className="mt-8">
-            <ConfirmAccount token={token}/>
-        </div>
+        <ConfirmAccount token={token}/>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { getCountries } from '@/src/schemas/countries'
 import LoadingForm from './LoadingForm'
-import { HeroFormSearchInput } from './HeroFormSearchInput'
+import { HeroFormSearch } from './HeroFormSearch'
 
 export default function Hero() {
     return (
@@ -37,23 +37,7 @@ export const HeroForm = async () => {
 
     return (
         <form className="hero__form">
-            <div className="bg-input/30 flex items-center gap-2">
-                <HeroFormSearchInput />
-                <div className="hero__separator"></div>
-                <Select>
-                    <SelectTrigger className="h-12 w-[180px] border-none" style={{ background: 'transparent' }}>
-                        <SelectValue placeholder="Ubicación" />
-                    </SelectTrigger>
-                    <SelectContent className=''>
-                        {countries.map(country => (
-                            <SelectItem key={country.id} value={country.isoCode}>
-                                {country.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-                {/* <input className="hero__search" type="text" placeholder="Buscar trabajo"/> */}
-            </div>
+            <HeroFormSearch />
             <Button className='h-12' size={'lg'}>Buscar</Button>
         </form>
     )

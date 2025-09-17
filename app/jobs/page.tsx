@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   description: 'Encuentra el trabajo de tu sueño en Jobs Easy',
 }
 
-export default async function page({ searchParams }: { searchParams: Promise<{ auth?: string, typeJob?: string, location?: string }> }) {
+export default async function page({ searchParams }: { searchParams: Promise<{ auth?: string, typeJob?: string, location?: string, minPrice?: string, maxPrice?: string, page?: string }> }) {
 
-  const { auth, location, typeJob } = await searchParams
+  const { auth, location, typeJob, minPrice, maxPrice, page } = await searchParams
 
 
   return  <>
@@ -38,7 +38,7 @@ export default async function page({ searchParams }: { searchParams: Promise<{ a
                               <AsideJob />
                                <JobProvider>
                                   <Suspense fallback={<LoadingJobs />}>
-                                      <Jobs auth={auth} location={location? +location : undefined} typeJob={typeJob ? +typeJob : undefined} />
+                                      <Jobs auth={auth} location={location? +location : undefined} typeJob={typeJob ? +typeJob : undefined} minPrice={minPrice ? +minPrice : undefined} maxPrice={maxPrice ? +maxPrice : undefined} page={page ? +page : undefined} />
                                   </Suspense>
                                  <JobDetailsModal />
                                </JobProvider>         

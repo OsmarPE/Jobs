@@ -50,10 +50,8 @@ export const searchCitiesSchema = z.object({
   name: z.string()
     .min(1, "El término de búsqueda es requerido")
     .max(100, "El término de búsqueda no puede exceder 100 caracteres"),
-  stateId: z.coerce.number()
-    .positive("El ID del estado debe ser un número positivo")
-    .optional()
-});
+  countryId: z.number().optional()
+})
 
 // Tipos TypeScript para esquemas de validación
 export type CreateCityType = z.infer<typeof createCitySchema>;
@@ -143,19 +141,15 @@ export const getCitiesByStateId = async (stateId: number): Promise<City[]> => {
 };
 
 // Buscar ciudades por nombre
-export const searchCities = async (searchTerm: string, stateId?: number): Promise<City[]> => {
+export const searchCities = async (searchTerm: string, countryId?: number): Promise<City[]> => {
   try {
-    const whereConditions = [ilike(cities.name, `${searchTerm}%`)];
-    
-    if (stateId) {
-      whereConditions.push(eq(cities.stateId, stateId));
-    }
+    let data: any[] = [];
 
-    const data = await db
+    data = await db
       .query
       .cities
       .findMany({
-        where: whereConditions.length > 1 ? and(...whereConditions) : whereConditions[0],
+        where: ilike(cities.name, `${searchTerm}%`),
         with: {
           state: {
             with: {
@@ -164,9 +158,14 @@ export const searchCities = async (searchTerm: string, stateId?: number): Promis
           }
         },
         orderBy: (cities, { asc }) => [asc(cities.name)],
-        limit: 10 // Limitar resultados de búsqueda
+        limit: 10
       });
-    
+
+
+    if (countryId) {
+      data = data.filter(city => city.state.country.id === countryId);
+    }
+
     return data;
   } catch (error) {
     throw new Error(`Error searching cities: ${error}`);

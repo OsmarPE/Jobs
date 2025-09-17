@@ -1,5 +1,5 @@
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, gte, ilike, lte, or } from 'drizzle-orm';
 import { job } from '../db/schema';
 import { db } from '..';
 
@@ -21,12 +21,16 @@ interface JobFilters {
   limit?: number;
   offset?: number;
   page?: number;
+  search?: string;
+  countryId?: number;
 }
 
 
 export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): Promise<Job[]> => {
 
-  const { typeJob, location, limit, page } = filters  
+  
+  const { typeJob, location, limit, page, search, salaryMax, salaryMin } = filters
+  console.log(page);
   const offset = (limit && page) ? limit * (page - 1) : 0;
 
     let where: any[] = []
@@ -34,10 +38,13 @@ export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): 
     if (where){
       if(typeJob) where.push(eq(job.timeJobId, typeJob))
       if (location) where.push(eq(job.locationId, location))
+      if (search) where.push(ilike(job.title, `${search}%`))
+      if (salaryMin) where.push(gte(job.salaryMin, salaryMin.toString()))
+      if (salaryMax) where.push(or(lte(job.salaryMax, salaryMax.toString()), lte(job.salaryMin, salaryMax.toString())))
     }
     
     try {
-      const data = await db
+      let data = await db
         .query
         .job
         .findMany({
@@ -71,7 +78,7 @@ export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): 
             
           },
           limit: filters.limit,
-          offset: filters.offset
+          offset
         });
       
         

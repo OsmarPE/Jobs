@@ -6,9 +6,9 @@ import { getUserByToken } from "@/lib/auth";
 import { getJobs } from "@/src/schemas/job";
 import { JobType  } from "@/types";
 
-export default async function Jobs({ auth, typeJob,location}: { auth?: string, location?: number, typeJob?: number }) {
-    
-    const data = await getJobs({typeJob,location})
+export default async function Jobs({ auth, typeJob,location, minPrice, maxPrice, page }: { auth?: string, location?: number, typeJob?: number, minPrice?: number, maxPrice?: number, page?: number }) {
+
+    const data = await getJobs({typeJob,location,salaryMin: minPrice, salaryMax: maxPrice, limit: 10, page: page ?? 1})
     const jobs = data as unknown as JobType[]
     const user = await getUserByToken();
 

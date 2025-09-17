@@ -13,27 +13,30 @@ import {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const stateId = searchParams.get('stateId');
     const search = searchParams.get('search');
+    const countryId = searchParams.get('countryId');
 
     // Si se proporciona search, buscar ciudades por nombre
     if (search) {
       const validation = searchCitiesSchema.safeParse({ 
         name: search,
-        stateId: stateId || undefined 
+        countryId: isNaN(Number(countryId)) ? undefined : Number(countryId)
       });
       
       if (!validation.success) {
+        
         return NextResponse.json(
           { 
-            error: 'Parámetros de búsqueda inválidos',
-            details: validation.error.issues 
+            message: 'Parámetros de búsqueda inválidos',
+            data: null,
+            success: false
           },
           { status: 400 }
         );
       }
-
-      const cities = await searchCities(validation.data.name, validation.data.stateId);
+      console.log(validation.data);
+      
+      const cities = await searchCities(validation.data.name, validation.data.countryId);
       return NextResponse.json({
         success: true,
         data: cities,
@@ -41,29 +44,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Si se proporciona stateId, obtener ciudades por estado
-    if (stateId) {
-      const validation = citiesByStateSchema.safeParse({ stateId });
-      
-      if (!validation.success) {
-        return NextResponse.json(
-          { 
-            error: 'Parámetros inválidos',
-            details: validation.error.issues 
-          },
-          { status: 400 }
-        );
-      }
-
-      const cities = await getCitiesByStateId(validation.data.stateId);
-      return NextResponse.json({
-        success: true,
-        data: cities,
-        message: `Ciudades obtenidas para el estado ${stateId}`
-      });
-    }
-
-    // Obtener todas las ciudades
+   
     const cities = await getCities();
     return NextResponse.json({
       success: true,

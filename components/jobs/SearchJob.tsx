@@ -22,7 +22,7 @@ export default function SearchJob() {
     return (
         <form className="hero__form jobs__form">
             <div className="hero__input">
-                <input className="hero__search" defaultValue={search} type="text" placeholder="Buscar trabajo" onChange={(e) => handleSearch(e.target.value)} />
+                <input className="hero__search" defaultValue={search} type="text" placeholder="Buscar trabajo" onChange={(e) => handleSearch(e.target.value)} autoComplete='off' />
                 <div className="hero__separator"></div>
                 <input className="hero__location" type="text" placeholder="Ubicación" />
             </div>

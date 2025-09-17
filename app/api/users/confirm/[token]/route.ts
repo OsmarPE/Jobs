@@ -1,4 +1,5 @@
 import { activateUser, getUserByToken } from "@/src/schemas/user";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ token: string }> }) {
@@ -21,7 +22,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         
         const isActive = await activateUser(data.id);
 
-        return NextResponse.json({ message: "Cuenta activada correctamente", status: 200 });
+        const cookie = await cookies();
+        
+
+        return NextResponse.json({ message: "Cuenta activada correctamente", data, status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "No se pudo crear la cuenta" }, { status: 500 });
     }
