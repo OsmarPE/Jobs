@@ -26,7 +26,7 @@ interface JobFilters {
 }
 
 
-export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): Promise<Job[]> => {
+export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): Promise<{ data: Job[]; totalPages: number; page: number; }> => {
 
   
   const { typeJob, location, limit, page, search, salaryMax, salaryMin } = filters
@@ -81,9 +81,14 @@ export const  getJobs = async ( filters: JobFilters = { limit: 10 , page: 1} ): 
           offset
         });
       
+      const totalPages = limit ? Math.ceil((data.length ?? 0) / limit) : 1;
         
-        
-      return data;
+      return {
+        data,
+        totalPages,
+        page: page ?? 1
+      };
+
     } catch (error) {
       throw new Error(`Error fetching jobs: ${error}`);
     }

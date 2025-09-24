@@ -11,13 +11,11 @@ import {
 import { useURLParams } from "@/hooks/use-params-url"
 import { useState } from "react"
 
-export function JobPagination({length = 3}:{length?: number}) {
+export function JobPagination({totalPages = 3, pageCurrent = 1}: {totalPages?: number, pageCurrent?: number}) {
 
 
   const { updateParams, getParam } = useURLParams()
   const [currentPage, setCurrentPage] = useState<number>(  () => Number(getParam('page') || '1')  )
-
-  const totalPages = length
 
   const arrayPages = Array.from({length: totalPages}, (_, i) => i + 1)
 
@@ -26,6 +24,8 @@ export function JobPagination({length = 3}:{length?: number}) {
     setCurrentPage(newPage)
     updateParams({'page': newPage.toString()})
   }
+
+  if (totalPages <= 1) return null
 
   return (
     <Pagination >

@@ -2,15 +2,23 @@
 import Job from "@/components/jobs/Job";
 import JobAuthWarning from "@/components/jobs/JobAuthWarning";
 import { JobPagination } from "@/components/jobs/JobPagination";
+import Message from "@/components/ui/message";
 import { getUserByToken } from "@/lib/auth";
 import { getJobs } from "@/src/schemas/job";
 import { JobType  } from "@/types";
+import { AlertCircle } from "lucide-react";
 
 export default async function Jobs({ auth, typeJob,location, minPrice, maxPrice, page }: { auth?: string, location?: number, typeJob?: number, minPrice?: number, maxPrice?: number, page?: number }) {
 
     const data = await getJobs({typeJob,location,salaryMin: minPrice, salaryMax: maxPrice, limit: 10, page: page ?? 1})
-    const jobs = data as unknown as JobType[]
+    const jobs = data?.data as unknown as JobType[]
     const user = await getUserByToken();
+
+    if (jobs?.length === 0){
+        return (
+            <Message>No se encontraron trabajos</Message>
+        )
+    }
 
     return (
         <section className="jobs__results">
@@ -43,7 +51,7 @@ export default async function Jobs({ auth, typeJob,location, minPrice, maxPrice,
                 )
             }
             {auth == 'true' && <JobAuthWarning />}
-            <JobPagination />
+            <JobPagination totalPages={data?.totalPages} pageCurrent={data?.page} />
         </section>
     )
 }
