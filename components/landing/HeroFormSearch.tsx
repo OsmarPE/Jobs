@@ -28,6 +28,8 @@ export const HeroFormSearch = () => {
     useEffect(() => {
         const getCountries = async () => {
             const { data, success } = await jobsApi.getAllCountries()
+            console.log(data);
+            
             if (success) {
                 setCountries(data)
             }
@@ -74,7 +76,7 @@ export const HeroFormSearch = () => {
                     </SelectTrigger>
                     <SelectContent className=''>
                         {countries.map(country => (
-                            <SelectItem key={country.id} value={country.id.toString()} >
+                            <SelectItem key={country.id} value={country.id?.toString()} >
                                 {country.name}
                             </SelectItem>
                         ))}

@@ -34,7 +34,7 @@ export const  getLocations = async ( filter?: locationFilters): Promise<Location
 
 export const getCountries = async () => {
   try {
-    const data = await db.select({ name: location.country }).from(location).groupBy(location.country);
+    const data = await db.selectDistinctOn([location.country],{ id: location.id, name: location.country }).from(location).orderBy(desc(location.country));
     return data;
   } catch (error) {
     throw new Error(`Error fetching countries: ${error}`);
