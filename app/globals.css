@@ -1997,6 +1997,11 @@ body.hidden-scroll::-webkit-scrollbar {
             transparent 100%);
 }
 
+.step__actions{
+    display: grid;
+    gap: 1rem;
+}
+
 @keyframes slideInfinite {
     from {
         transform: translateX(0);

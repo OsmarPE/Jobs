@@ -24,7 +24,7 @@ export const users = pgTable('users', {
   cv: text('cv'),
   active: boolean('active').default(false),
   locationId: integer('location_id').references(() => location.id),
-  direction: varchar('direction', { length: 200 }),
+  description: varchar('description', { length: 260 }),
   salary: decimal('salary', { precision: 10, scale: 2 }).default('0'),
   code: varchar('code', { length: 10 }),
   finishedRegistration: boolean('finished_registration').default(false),

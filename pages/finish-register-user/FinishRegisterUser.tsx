@@ -1,26 +1,29 @@
 'use client';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FinishRegisterSuccess from "./FinishRegisterSuccess";
 import Circle from "@/components/landing/Circle";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { jobsApi } from "@/app/services/api";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function FinishRegisterUser({id}:{id:string}) {
     
     const [section, setSection] = useState('');
     const [step, setStep] = useState(0);
     const [success, setSuccess] = useState(false);
-
-
+    const [countries, setCountries] = useState([]);
+    const [cities, setCities] = useState([]);
 
     const formSchema = z.object({
         locationId: z.string().min(1, { message: 'Debes ingresar una ubicación' }),
         salary: z.string().min(1, { message: 'Debes ingresar un salario' }),
-        phone: z.string().min(1, { message: 'Debes ingresar un número de teléfono' }).max(10, { message: 'Debes ingresar un número de teléfono válido' })
+        phone: z.string().min(1, { message: 'Debes ingresar un número de teléfono' }).max(10, { message: 'Debes ingresar un número de teléfono válido' }),
+        country: z.string().min(1, { message: 'Debes ingresar un país'})
     })
 
     const form = useForm({
@@ -28,12 +31,13 @@ export default function FinishRegisterUser({id}:{id:string}) {
         defaultValues: {
             locationId: '',
             salary: '',
-            phone: ''
+            phone: '',
+            country: ''
         }
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        
+   
         const response = await fetch(`/api/users/${id}`, {
             method: 'PUT',
             headers: {
@@ -41,8 +45,7 @@ export default function FinishRegisterUser({id}:{id:string}) {
             },
             body: JSON.stringify({
                 ...data,
-                finishedRegistration: true,
-                locationId: 1
+                finishedRegistration: true
             })
         });
 
@@ -97,29 +100,93 @@ export default function FinishRegisterUser({id}:{id:string}) {
         setStep(step - 1);
     }
 
+    const getCityByCountry = async(country: string) => {
+        try {
+            const response = await jobsApi.getCityByCountry(country);
+            console.log(response);
+            
+            setCities(response.data);
+        } catch (error) {
+            console.error("Error fetching cities by country:", error);
+        }
+    }
+
+    useEffect(() => {
+        const fetchCountries = async () => {
+            try {
+                const response = await jobsApi.getAllCountries();
+                console.log(response.data);
+                
+                setCountries(response.data);
+            } catch (error) {
+                console.error("Error fetching countries:", error);
+            }
+        };
+
+        fetchCountries();
+    }, []);
+
     return (
         <Form {...form}>
             <Circle className="circle-left-header" />
             {!success ? (<article className="step">
                 <div className="step__bar">
-                    <div className="step__progress"></div>
+                    <div className="step__progress" style={{ width: `${((step + 1) / sections.length) * 100}%` }}></div>
                 </div>
                 <h2 className="step__title">{sections?.[step]?.title}</h2>
                 <p className="step__text">{sections?.[step]?.content}</p>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="step__form">
-                    {sections?.[step]?.section === 'location' && <FormField
-                        control={form.control}
-                        name="locationId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="step__label label">Ubicación</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Mexico" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />}
+                    {sections?.[step]?.section === 'location' && 
+                    <div className="grid grid-cols-2 gap-4 ">
+                         {countries.length > 0 && <FormField
+                            control={form.control}
+                            name="country"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Pais</FormLabel>
+                                <Select onValueChange={(value) => {
+                                    field.onChange(value)
+                                    getCityByCountry(value)
+                                }} defaultValue={field.value}>
+                                    <FormControl >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Mexico" />
+                                    </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                   { countries.map((country: any) => (
+                                        <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                                   ))}
+                                    </SelectContent>
+                                </Select>
+                                </FormItem>
+                            )}
+                            />}
+                            {cities.length > 0 && <FormField
+                                control={form.control}
+                                name="locationId"
+                                render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel className="step__label label">Ciudad</FormLabel>
+                                        <FormControl className="w-full">
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Monterrey" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {cities.map((city: any) => (
+                                                        <SelectItem key={city.id} value={city.id.toString()}>{city.name}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />}
+                    </div>
+                    
+                    }
                     {
                         sections?.[step]?.section === 'salary' && <FormField
                             control={form.control}
@@ -143,16 +210,17 @@ export default function FinishRegisterUser({id}:{id:string}) {
                                 <FormItem>
                                     <FormLabel className="step__label label">Número de teléfono</FormLabel>
                                     <FormControl>
-                                        <Input type="tel" placeholder="+56 999999999" {...field} />
+                                        <Input type="tel" placeholder="Ej: 999-232-3492" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     }
-
-                    <button type="button" onClick={ () => handleNextSection(step)} className="step__submit btn btn--primary">Siguiente</button>
-
+                    <div className="step__actions">
+                        <button type="button" onClick={ () => handleNextSection(step)} className="step__submit btn btn--primary">Siguiente</button>
+                        {(step > 0 && step < sections.length - 1) && <button type="button" onClick={handlePreviousSection} className="step__back btn btn--secundary w-full">Atrás</button>}
+                    </div>
                 </form>
             </article>
             ) : <FinishRegisterSuccess />

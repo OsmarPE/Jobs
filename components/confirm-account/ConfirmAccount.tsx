@@ -57,8 +57,8 @@ export default function ConfirmAccount({ className = "", token }: Props) {
         return;
       }
 
-      toast.success(data.message);
-      setUserId(data.userId);
+
+      setUserId(data.data.id);
       setAccountActivate(true);
     } catch (error) {
       if (error instanceof Error) {

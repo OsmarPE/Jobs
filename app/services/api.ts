@@ -243,7 +243,8 @@ export const jobsApi = {
   createBookmark: (data: NewBookmark) => api.post('/bookmark', data),
   deleteBookmark: (jobId: string) => api.delete(`/bookmark/${jobId}`),
 
-  getAllCountries: () => api.get('/countries'),
+  getAllCountries: () => api.get('/location/countries'),
+  getCityByCountry: (country: string) => api.get(`/location/city/${country}`),
 };
 
 // Exportar la instancia principal para uso directo
